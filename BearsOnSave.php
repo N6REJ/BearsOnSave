@@ -71,7 +71,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// @TODO we gotta find out what site template it is and its name/location
 		// Gather template parameters.
-		$this->DoGetParms($check);
+		$this->DoGetParms($context);
 
 		// process params just like is currently done.
 		@include_once 'params.php';
@@ -106,13 +106,13 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return;
 	}
 
-	public function DoGetParms()
+	public function DoGetParms($context)
 	{
 		$app      = JFactory::getApplication('site');
 		$template = JFactory::getApplication()->getTemplate();
 		// Get template params
 		//$templateParams = $app->getTemplate(true)->params;
-
+		JFactory::getApplication()->enqueueMessage($context, 'info');
 		JFactory::getApplication()->enqueueMessage($template, 'info');
 
 		return;
