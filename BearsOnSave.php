@@ -10,6 +10,7 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 
@@ -62,6 +63,8 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	{
 		// Check for DoMinimize in plugin params.
 //var_dump("triggers properly!");
+		// Temp message to show its triggering.
+		Factory::getApplication()->enqueueMessage('HEY! that tickles!!', 'info');
 
 		// Gather template parameters.
 
