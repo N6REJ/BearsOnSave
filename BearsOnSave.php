@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @package   bearsonsave
  * @since     1.0.0
  */
-class PlgExtensionBearsOnSave extends JPlugin
+class plgExtensionBearsOnSave extends CMSPlugin
 {
 	/**
 	 * Application object
@@ -61,7 +61,7 @@ class PlgExtensionBearsOnSave extends JPlugin
 	public function onExtensionAfterSave()
 	{
 		// Check for DoMinimize in plugin params.
-var_dump("triggers properly!");
+//var_dump("triggers properly!");
 
 		// Gather template parameters.
 
