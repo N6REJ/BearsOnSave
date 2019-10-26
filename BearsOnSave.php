@@ -62,9 +62,14 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onExtensionAfterSave()
+	public function onExtensionAfterSave($context, $table, $isNew)
 	{
+		if ( $context !== 'com_templates.style' || $table->client_id )
+		{
+			return;
+		}
 
+		// @TODO we gotta find out what site template it is and its name/location
 		// Gather template parameters.
 		$this->DoGetParms($check);
 
@@ -103,10 +108,12 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 	public function DoGetParms()
 	{
+		$app      = JFactory::getApplication('site');
+		$template = JFactory::getApplication()->getTemplate();
 		// Get template params
 		//$templateParams = $app->getTemplate(true)->params;
 
-		JFactory::getApplication()->enqueueMessage($templateParams, 'info');
+		JFactory::getApplication()->enqueueMessage($template, 'info');
 
 		return;
 	}
