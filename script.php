@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    BearsOnSave
+ * @package    bearsonsave
  *
  * @author     Bear <your@email.com>
  * @copyright  A copyright
@@ -11,12 +11,12 @@
 defined('_JEXEC') or die;
 
 /**
- * BearsOnSave script file.
+ * bearsonsave script file.
  *
- * @package   BearsOnSave
+ * @package   bearsonsave
  * @since     1.0.0
  */
-class plgSystemBearsOnSaveInstallerScript
+class PlgExtensionBearsOnSaveInstallerScript
 {
 	/**
 	 * Constructor

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    BearsOnSave
+ * @package    bearsonsave
  *
  * @author     Bear <your@email.com>
  * @copyright  A copyright
@@ -14,12 +14,12 @@ use Joomla\CMS\Plugin\CMSPlugin;
 defined('_JEXEC') or die;
 
 /**
- * BearsOnSave plugin.
+ * bearsonsave plugin.
  *
- * @package   BearsOnSave
+ * @package   bearsonsave
  * @since     1.0.0
  */
-class plgSystemBearsOnSave extends JPlugin
+class PlgExtensionBearsOnSave extends JPlugin
 {
 	/**
 	 * Application object
@@ -45,7 +45,7 @@ class plgSystemBearsOnSave extends JPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onSystemAfterInstall()
+	public function onExtensionAfterInstall()
 	{
 		// @Todo run AfterSave so that the params.css file is created
 		// Create "DoMinimize" param to find out if user wants files compressed or not.
@@ -58,10 +58,10 @@ class plgSystemBearsOnSave extends JPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onSystemAfterSave()
+	public function onExtensionAfterSave()
 	{
 		// Check for DoMinimize in plugin params.
-
+print_r("yes bear i'm here!");
 var_dump($this);
 		// Gather template parameters.
 
