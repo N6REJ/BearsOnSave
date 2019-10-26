@@ -24,16 +24,9 @@
         <fields name="params">
             <fieldset name="basic">
                 <field
-                        name="sample"
-                        type="text"
-                        default="42"
-                        label="PLG_BEARSONSAVE_SAMPLE_LABEL"
-                        description="PLG_BEARSONSAVE_SAMPLE_DESCRIPTION"
-                />
-                <field
                         name="DoMinimize"
                         type="radio"
-                        default="1"
+                        default = "0"
                         class="btn-group btn-group-yesno"
                         label="PLG_BEARSONSAVE_DO_MINIMIZE_LABEL"
                         description="PLG_BEARSONSAVE_DO_MINIMIZE_DESC"

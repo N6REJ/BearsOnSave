@@ -10,7 +10,7 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
-
+use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
 
@@ -49,7 +49,10 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	public function onExtensionAfterInstall()
 	{
 		// @Todo run AfterSave so that the params.css file is created
-		// Create "DoMinimize" param to find out if user wants files compressed or not.
+		// Show file compressed in plugin dialog so user is aware of it
+
+		// Create the css for the first time
+		$this->onExtensionAfterSave();
 	}
 
 	/**
@@ -61,36 +64,86 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 */
 	public function onExtensionAfterSave()
 	{
-		// Check for DoMinimize in plugin params.
-//var_dump("triggers properly!");
-		// Temp message to show its triggering.
-		jFactory::getApplication()->enqueueMessage('HEY! that tickles!!', 'info');
 
 		// Gather template parameters.
+		$this->DoGetParms($check);
 
 		// process params just like is currently done.
+		@include_once 'params.php';
 
-		// export created css into "params.css" file.
-		$this->AfterWrite();
+		// Check for DoMinimize
+		$this->DoMinimize($check);
+
+		// export created css file(s).
+		$this->DoWrite($paramsCSS);
+
+		// Trap Errors
+		$this->AfterWrite($check);
 
 		// Exit back to CMS
+		return true;
+	}
+
+	public function DoWrite($paramsCSS)
+	{
+		/* Write css file(s).
+		 *
+		 * add the HTMLHelper to init.php.  Be sure debug helper is added!
+		 * then write the params.css file
+		 */
+		// Used with HTMLHelper::
+		$HTMLHelperDebug = array('version' => 'auto', 'relative' => true, 'detectDebug' => true);
+		if ( $paramsCSS )
+		{
+			HTMLHelper::_('stylesheet', 'params.css', $HTMLHelperDebug);
+		}
+
 		return;
 	}
 
-	public function AfterWrite()
+	public function DoGetParms()
+	{
+		// Get template params
+		//$templateParams = $app->getTemplate(true)->params;
+
+		JFactory::getApplication()->enqueueMessage($templateParams, 'info');
+
+		return;
+	}
+
+	public function AfterWrite($check)
 	{
 		// Trap errors.
 
 		return;
 	}
 
-	public function DoMinimize()
+	public function DoMinimize($check)
 	{
 		// Check for minimize in plugin params.
+		$params = $this->params;
+
+		if ( $this->params->get('DoMinimize') )
+		{
+			JFactory::getApplication()->enqueueMessage($params, 'warning');
+		}
 
 		// If minimize compress params.css into params.min.css
 
-		// Trap errors.
+		return;
+	}
+
+	public function ShowSuccess($check)
+	{
+		JFactory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
+
+		return;
+	}
+
+	public function ShowFailure($check)
+	{
+		JFactory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAIL', 'danger');
+
 		return;
 	}
 }
