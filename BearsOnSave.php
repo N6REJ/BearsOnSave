@@ -61,8 +61,8 @@ class PlgExtensionBearsOnSave extends JPlugin
 	public function onExtensionAfterSave()
 	{
 		// Check for DoMinimize in plugin params.
-print_r("yes bear i'm here!");
-var_dump($this);
+var_dump("triggers properly!");
+
 		// Gather template parameters.
 
 		// process params just like is currently done.
