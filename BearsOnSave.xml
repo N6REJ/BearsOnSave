@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="plugin" version="3.8" group="system" method="upgrade">
+<extension type="plugin" version="3.8" group="extension" method="upgrade">
     <name>PLG_BEARSONSAVE</name>
     <creationDate>25-Oct-19</creationDate>
     <author>Bear</author>
@@ -15,7 +15,7 @@
 
     <!-- Plugin files -->
     <files>
-        <filename plugin="BearsOnSave">BearsOnSave.php</filename>
+        <filename plugin="bearsonsave">bearsonsave.php</filename>
         <folder>language</folder>
     </files>
 
@@ -47,7 +47,7 @@
 
     <!-- Update servers -->
     <updateservers>
-        <server type="extension" priority="1" name="BearsOnSave">https://www.example.com/plg_BearsOnSave.xml
+        <server type="extension" priority="1" name="bearsonsave">https://www.example.com/plg_bearsonsave.xml
         </server>
     </updateservers>
 </extension>
