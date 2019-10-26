@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="3.8" group="system" method="upgrade">
+    <name>PLG_BEARSONSAVE</name>
+    <creationDate>25-Oct-19</creationDate>
+    <author>Bear</author>
+    <authorEmail>your@email.com</authorEmail>
+    <authorUrl>http://your.url.com</authorUrl>
+    <copyright>A copyright</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>j39.20.10.26</version>
+    <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
+
+    <!-- Scripts to run on installation -->
+   <!--  <scriptfile></scriptfile>  -->
+
+    <!-- Plugin files -->
+    <files>
+        <filename plugin="BearsOnSave">BearsOnSave.php</filename>
+        <folder>language</folder>
+    </files>
+
+    <!-- Config parameter -->
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                        name="sample"
+                        type="text"
+                        default="42"
+                        label="PLG_BEARSONSAVE_SAMPLE_LABEL"
+                        description="PLG_BEARSONSAVE_SAMPLE_DESCRIPTION"
+                />
+                <field
+                        name="DoMinimize"
+                        type="radio"
+                        default="1"
+                        class="btn-group btn-group-yesno"
+                        label="PLG_BEARSONSAVE_DO_MINIMIZE_LABEL"
+                        description="PLG_BEARSONSAVE_DO_MINIMIZE_DESC"
+                >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+
+    <!-- Update servers -->
+    <updateservers>
+        <server type="extension" priority="1" name="BearsOnSave">https://www.example.com/plg_BearsOnSave.xml
+        </server>
+    </updateservers>
+</extension>

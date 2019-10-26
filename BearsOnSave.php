@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @package   BearsOnSave
  * @since     1.0.0
  */
-class plgExtensionBearsOnSave extends CMSPlugin
+class plgSystemBearsOnSave extends JPlugin
 {
 	/**
 	 * Application object
@@ -45,7 +45,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onExtensionAfterInstall()
+	public function onSystemAfterInstall()
 	{
 		// @Todo run AfterSave so that the params.css file is created
 		// Create "DoMinimize" param to find out if user wants files compressed or not.
@@ -58,10 +58,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onExtensionAfterSave()
+	public function onSystemAfterSave()
 	{
 		// Check for DoMinimize in plugin params.
 
+var_dump($this);
 		// Gather template parameters.
 
 		// process params just like is currently done.
