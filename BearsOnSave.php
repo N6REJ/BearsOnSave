@@ -11,6 +11,7 @@
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 
@@ -68,10 +69,10 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		{
 			return;
 		}
-
 		// @TODO we gotta find out what site template it is and its name/location
 		// Gather template parameters.
-		$this->DoGetParms($check);
+		$check = '';
+		$data  = $this->DoGetParams($table);
 
 		// process params just like is currently done.
 		@include_once 'params.php';
@@ -80,6 +81,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$this->DoMinimize($check);
 
 		// export created css file(s).
+		$paramsCSS = '';
 		$this->DoWrite($paramsCSS);
 
 		// Trap Errors
@@ -97,25 +99,22 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		 * then write the params.css file
 		 */
 		// Used with HTMLHelper::
-		$HTMLHelperDebug = array('version' => 'auto', 'relative' => true, 'detectDebug' => true);
+		/*$HTMLHelperDebug = array('version' => 'auto', 'relative' => true, 'detectDebug' => true);
 		if ( $paramsCSS )
 		{
 			HTMLHelper::_('stylesheet', 'params.css', $HTMLHelperDebug);
 		}
+		*/
 
 		return;
 	}
 
-	public function DoGetParms()
+	public function DoGetParams($table)
 	{
-		$app      = JFactory::getApplication('site');
-		$template = JFactory::getApplication()->getTemplate();
-		// Get template params
-		//$templateParams = $app->getTemplate(true)->params;
+		// $table has all the params so lets fetch it.
+		$data = json_decode($table->params);
 
-		JFactory::getApplication()->enqueueMessage($template, 'info');
-
-		return;
+		return $data;
 	}
 
 	public function AfterWrite($check)
@@ -132,7 +131,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		if ( $this->params->get('DoMinimize') )
 		{
-			JFactory::getApplication()->enqueueMessage($params, 'warning');
+			Factory::getApplication()->enqueueMessage($params, 'warning');
 		}
 
 		// If minimize compress params.css into params.min.css
@@ -142,15 +141,90 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 	public function ShowSuccess($check)
 	{
-		JFactory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
+		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
 
 		return;
 	}
 
 	public function ShowFailure($check)
 	{
-		JFactory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAIL', 'danger');
+		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAIL', 'danger');
 
 		return;
 	}
+
+	/* =========== BEGIN group-by-key FUNCTION ================== */
+	/**
+	 * @param $array
+	 *
+	 * @return array
+	 *
+	 * @since 1.0
+	 *
+	 * @description
+	 * $chooser = $this->params->get('yourfieldname');
+	 * $json = json_decode($chooser, true);
+	 * if($json){$filtered_array = group_by_key($json);}
+	 * either pull value from $filtered_array[R][C] where R = row & C = column or
+	 * run through for each extraction ( see google fonts ) R&C start with 0!
+	 * irregardless as of acorn-B70 each call will need a unique variable declaration.
+	 */
+
+	function group_by_key($array)
+	{
+		$result = array();
+		/* Safety Trap - Alan */
+		if ( !is_array($array) )
+		{
+			return $result;
+		}
+
+		foreach ( $array as $sub )
+		{
+			foreach ( $sub as $k => $v )
+			{
+				$result[$k][] = $v;
+			}
+		}
+
+		return $result;
+	}
+
+
+// =========== BEGIN PX PARAMETER VALIDATION FUNCTION ==================
+	/* Check for whether a size type ( px, rem, etc ) is used or not.
+		if not then it add's px assuming thats what they should've put.
+		if they did put auto, then it just uses that.
+		also forces any letters used to lowercase.
+	 */
+	function checkPX($check)
+	{
+		if ( $check !== 'auto' || $check !== 'px' )
+		{
+			// Trim spaces & junk
+			$check = trim($check);
+
+			// Do test
+			if ( preg_match('/(\-?[0-9]+)\s*(px|em|%|vh|rem|pt|cm|mm|in|pc|ex|ch|vw|vmin|vmax)?/', $check, $match) )
+			{
+				// Is there already a valid type?
+				if ( isset($match[2]) )
+				{
+					$unit = $match[2];
+				}
+
+				// Since they forgot to put a type just use px
+				else
+				{
+					$unit = 'px';
+				}
+				$check = $match[1] . $unit;
+			}
+		}
+
+		return strtolower($check);
+	}
+// =========== END PX PARAMETER VALIDATION FUNCTION ==================
+
+	/* ============= END OF CLASS ================== */
 }
