@@ -79,7 +79,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$data = $this->DoGetParams($table);
 
 		// process params just like is currently done.
-		@include_once 'params.php';
+		@require_once 'params.php';
 
 		if ( empty($css) )
 		{
@@ -147,7 +147,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return $data;
 	}
 
-	public function DoPrepend($table, $css)
+	public function DoPrepend($table, $css, $filename)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
@@ -170,21 +170,46 @@ class plgExtensionBearsOnSave extends CMSPlugin
 				Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED', 'danger');
 			}
 
-			// find out where we can put our @import
-			//$data = File::
-			// Add @import
+			// create @import
+			$import = '@import "' . (Path::clean($this->params->get('filename'))) . '";';
 
-			// Check for successful write.
+			// get existing custom.css data.
+			$data = file_get_contents($customCss);
+			if ( $data )
+			{
+				if ( strpos($data, $import) !== false )
+				{
+					// Nothing to be done, it's already there
+					return true;
+				}
+				else
+				{
+					// ok, lets add the @import.
+					$output = $import . "\n" . $data;
+
+					// Now write the new file.
+					if ( file_put_contents($customCss, $output) === false )
+					{
+						Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+
+						return false;
+					}
+				}
+			}
+			else
+			{
+				// Since custom.css doesn't exist our life is easy.
+				if ( file_get_contents($customCss, $css) === false )
+				{
+					Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+
+					return false;
+				}
+
+			}
+
+			return true;
 		}
-		else
-		{
-			// Since custom.css doesn't exist our life is easy.
-			file_put_contents($customCss, $css);
-
-			return;
-		}
-
-		return;
 	}
 
 	public function DoMinimize($check)
