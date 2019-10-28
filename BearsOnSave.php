@@ -8,9 +8,12 @@
  * @link       http://your.url.com
  */
 
+/** @var string $check */
+
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
@@ -61,6 +64,8 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 *
 	 * @return  void
 	 *
+	 * @throws Exception
+	 * @var string $css
 	 * @since   1.0.0
 	 */
 	public function onExtensionAfterSave($context, $table, $isNew)
@@ -71,27 +76,27 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 		// @TODO we gotta find out what site template it is and its name/location
 		// Gather template parameters.
-		$check = '';
 		$data  = $this->DoGetParams($table);
 
 		// process params just like is currently done.
 		@include_once 'params.php';
 
+		if ( !empty($css) )
+		{
+			Factory::getApplication()->enqueueMessage($css, 'success');
+		}
+
 		// Check for DoMinimize
-		$this->DoMinimize($check);
+		$this->DoMinimize($this->params->get('dMinimize'));
 
 		// export created css file(s).
-		$paramsCSS = '';
-		$this->DoWrite($paramsCSS);
-
-		// Trap Errors
-		$this->AfterWrite($check);
+		$this->DoWrite($css, $table);
 
 		// Exit back to CMS
-		return true;
+		return;
 	}
 
-	public function DoWrite($paramsCSS)
+	public function DoWrite($css, $table)
 	{
 		/* Write css file(s).
 		 *
@@ -105,6 +110,17 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			HTMLHelper::_('stylesheet', 'params.css', $HTMLHelperDebug);
 		}
 		*/
+
+		// What template?
+		$filename = $this->params->get('filename');
+		$file     = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $filename);
+
+		/* @TODO delete before save */
+
+		// write css file
+		File::write($file, $css, false);
+
+		/* @TODO check for saved file */
 
 		return;
 	}
@@ -126,8 +142,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 	public function DoMinimize($check)
 	{
-		// Check for minimize in plugin params.
-		$params = $this->params;
 
 		if ( $this->params->get('DoMinimize') )
 		{
@@ -135,18 +149,17 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// If minimize compress params.css into params.min.css
-
 		return;
 	}
 
-	public function ShowSuccess($check)
+	public function ShowSuccess()
 	{
 		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
 
 		return;
 	}
 
-	public function ShowFailure($check)
+	public function ShowFailure()
 	{
 		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAIL', 'danger');
 

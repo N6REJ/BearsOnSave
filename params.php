@@ -11,11 +11,9 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Filesystem\Path;
 
 // MANDATORY FUNCTIONS
-@include_once 'functions.php';
+@include_once 'helper/functions.php';
 
 /*
  * Each template tab should have its own "section" just like it currently is in the framework files.
@@ -45,8 +43,14 @@ use Joomla\CMS\Filesystem\Path;
 // Do we even have any params to work with?
 if ( !$data )
 {
-	Factory::getApplication()->enqueueMessage('WTH ARE THE PARAMS!!!!', 'danger');
-
+	try
+	{
+		Factory::getApplication()->enqueueMessage('WTH ARE THE PARAMS!!!!', 'danger');
+	}
+	catch ( Exception $e )
+	{
+		return $e;
+	}
 	return false;
 }
 
@@ -57,7 +61,6 @@ if ( !$data )
  *  **** LOGO ****
  * ===============
  */
-
 // Logo Params
 $json = false;
 if ( $data->extendedlogoParams )
@@ -111,7 +114,6 @@ if ( $data->extendedlogoParams )
 
 	}
 }
-
 /* ----- END LOGO ----- */
 
 
@@ -183,3 +185,4 @@ if ( $data->extendedlogoParams )
  *  **** SOCIAL ICONS ****
  * =======================
  */
+return $css;
