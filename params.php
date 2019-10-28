@@ -14,6 +14,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Filesystem\Path;
 
+// MANDATORY FUNCTIONS
+@include_once 'functions.php';
+
 /*
  * Each template tab should have its own "section" just like it currently is in the framework files.
  * After its all moved over here you can probably delete all framework param files.
@@ -54,8 +57,7 @@ if ( !$data )
  *  **** LOGO ****
  * ===============
  */
-var_dump(json_decode($data->logoParams, true));
-exit;
+
 // Logo Params
 $json = false;
 if ( $data->extendedlogoParams )
@@ -67,50 +69,48 @@ if ( $data->extendedlogoParams )
 	{
 
 		// Since we will always only have one row no need to run for each loop
-		$logoWidth                    = checkPX($filtered_array[0][1]);
-		$logoHeight                   = checkPX($filtered_array[0][2]);
-		$logoMargin                   = checkPX($filtered_array[0][3]);
-		$logoPadding                  = checkPX($filtered_array[0][4]);
-		$logohorizontal_alignmentment = $filtered_array[0][5];
-		$logovertical_alignmentment   = $filtered_array[0][6];
+		$logoWidth                = checkPX($filtered_array[0][1]);
+		$logoHeight               = checkPX($filtered_array[0][2]);
+		$logoMargin               = checkPX($filtered_array[0][3]);
+		$logoPadding              = checkPX($filtered_array[0][4]);
+		$logohorizontal_alignment = $filtered_array[0][5];
+		$logovertical_alignment   = $filtered_array[0][6];
 
 		// SET LOGO image WIDTH AND HEIGHT
 		if ( $logoHeight || $logoWidth )
 		{
-			$style = "header.main-header .logo img{ \n";
+			$css = "header.main-header .logo img{ \n";
 			if ( $logoWidth )
 			{
-				$style .= "	width: " . $logoWidth . ";\n";
-				$style .= "	min-width: " . $logoWidth . ";\n";
-				$style .= "	max-width: " . $logoWidth . ";\n";
+				$css .= "	width: " . $logoWidth . ";\n";
+				$css .= "	min-width: " . $logoWidth . ";\n";
+				$css .= "	max-width: " . $logoWidth . ";\n";
 			}
 			if ( $logoHeight )
 			{
-				$style .= "	height: " . $logoHeight . ";\n";
-				$style .= "	min-height: " . $logoHeight . ";\n";
-				$style .= "	max-height: " . $logoHeight . ";\n";
+				$css .= "	height: " . $logoHeight . ";\n";
+				$css .= "	min-height: " . $logoHeight . ";\n";
+				$css .= "	max-height: " . $logoHeight . ";\n";
 			}
 			if ( $logoMargin )
 			{
-				$style .= "	margin: " . $logoMargin . ";\n";
+				$css .= "	margin: " . $logoMargin . ";\n";
 			}
 			if ( $logoPadding )
 			{
-				$style .= "	padding: " . $logoPadding . ";\n";
+				$css .= "	padding: " . $logoPadding . ";\n";
 			}
-			$style .= "}\n";
+			$css .= "}\n";
 		}
 
 		// Allow for positioning of the logo
-		$style .= ".logo {\n"
-			. "	justify-self: " . $logohorizontal_alignmentment . ";\n"
-			. "	align-self: " . $logovertical_alignmentment . ";\n"
+		$css .= ".logo {\n"
+			. "	justify-self: " . $logohorizontal_alignment . ";\n"
+			. "	align-self: " . $logovertical_alignment . ";\n"
 			. "}\n";
 
 	}
 }
-print_r($style);
-exit;
 
 /* ----- END LOGO ----- */
 
