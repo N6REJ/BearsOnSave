@@ -100,7 +100,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		{
 
 			// bos.css written successfully
-			Factory::getApplication()->enqueueMessage('hi bear', 'success');
+			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
 		}
 
 		// Exit back to CMS
