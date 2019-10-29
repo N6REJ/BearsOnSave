@@ -94,7 +94,14 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// export created css file(s).
 		$file = $this->DoWrite($css, $table);
 
-		$this->DoPrepend($table, $css, $file);
+		$result = $this->DoPrepend($table, $css, $file);
+
+		if ( $result === true )
+		{
+
+			// bos.css written successfully
+			Factory::getApplication()->enqueueMessage('hi bear', 'success');
+		}
 
 		// Exit back to CMS
 		return;
@@ -102,18 +109,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 	public function DoWrite($css, $table)
 	{
-		/* Write css file(s).
-		 *
-		 * add the HTMLHelper to init.php.  Be sure debug helper is added!
-		 * then write the params.css file
-		 */
-		// Used with HTMLHelper::
-		/*$HTMLHelperDebug = array('version' => 'auto', 'relative' => true, 'detectDebug' => true);
-		if ( $paramsCSS )
-		{
-			HTMLHelper::_('stylesheet', 'params.css', $HTMLHelperDebug);
-		}
-		*/
+		/* Write css file(s). */
 
 		// What template?
 		$filename = $this->params->get('filename');
@@ -133,9 +129,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return false;
 		}
 
-		// bos.css written successfully
-		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
-
 		return $file;
 	}
 
@@ -147,7 +140,24 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return $data;
 	}
 
-	public function DoPrepend($table, $css, $filename)
+	public function DoBackup($backupCss, $customCss)
+	{
+		// Since custom.css exists we need to be very careful!
+		// backup existing custom.css to '.backup.custom.css' just to CYA
+		File::copy($customCss, $backupCss);
+
+		// Is it saved?
+		if ( !file_exists($backupCss) )
+		{
+			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED', 'danger');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function DoPrepend($table, $css, $file)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
@@ -156,60 +166,51 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Let's make some var's.
 		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
 		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
+		$import    = '@import "' . (Path::clean($this->params->get('filename'))) . '";';
 
-
-		if ( File::exists($customCss) )
+		if ( file_exists($customCss) === false )
 		{
-			// Since custom.css exists we need to be very careful!
-			// backup existing custom.css to '.backup.custom.css' just to CYA
-			File::copy($customCss, $backupCss);
-
-			// Is it saved?
-			if ( !File::exists($backupCss) )
+			// No custom.css so lets create one.
+			if ( file_put_contents($customCss, $import) === false )
 			{
-				Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED', 'danger');
+				Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+
+				return false;
 			}
+		}
 
-			// create @import
-			$import = '@import "' . (Path::clean($this->params->get('filename'))) . '";';
+		// Ok, it exists so time to backup.
+		if ( $this->DoBackup($backupCss, $customCss) === false )
+		{
+			return false;
+		}
 
-			// get existing custom.css data.
-			$data = file_get_contents($customCss);
-			if ( $data )
-			{
-				if ( strpos($data, $import) !== false )
-				{
-					// Nothing to be done, it's already there
-					return true;
-				}
-				else
-				{
-					// ok, lets add the @import.
-					$output = $import . "\n" . $data;
+		// get existing custom.css data.
+		$data = file_get_contents($customCss);
+		if ( $data === false )
+		{
+			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_READ_CUSTOMCSS_FAILED', 'danger');
 
-					// Now write the new file.
-					if ( file_put_contents($customCss, $output) === false )
-					{
-						Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
-
-						return false;
-					}
-				}
-			}
-			else
-			{
-				// Since custom.css doesn't exist our life is easy.
-				if ( file_get_contents($customCss, $css) === false )
-				{
-					Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
-
-					return false;
-				}
-
-			}
-
+			return false;
+		}
+		if ( strpos($data, $import) !== false )
+		{
+			// Nothing to be done, it's already there
 			return true;
 		}
+
+		// ok, lets add the @import.
+		$output = $import . "\n" . $data;
+
+		// Now write the new file.
+		if ( file_put_contents($customCss, $output) === false )
+		{
+			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+
+			return false;
+		}
+
+		return true;
 	}
 
 	public function DoMinimize($check)
@@ -221,20 +222,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// If minimize compress params.css into params.min.css
-		return;
-	}
-
-	public function ShowSuccess()
-	{
-		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
-
-		return;
-	}
-
-	public function ShowFailure()
-	{
-		Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAIL', 'danger');
-
 		return;
 	}
 
