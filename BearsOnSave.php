@@ -112,8 +112,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		/* Write css file(s). */
 
 		// What template?
-		$filename = $this->params->get('filename');
-		$file     = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $filename);
+		$file = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/bos.css');
 
 		// Delete existing bos.css file.
 		if ( File::exists($file) )
