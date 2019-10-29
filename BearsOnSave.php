@@ -56,7 +56,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Show file compressed in plugin dialog so user is aware of it
 
 		// Create the css for the first time
-		$this->onExtensionAfterSave();
+		//$this->onExtensionAfterSave($context, $table, $isNew);
 	}
 
 	/**

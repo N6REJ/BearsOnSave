@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="plugin" version="3.8" group="extension" method="upgrade">
+<extension type = "plugin" version = "3.8" group = "extension" method = "upgrade">
     <name>PLG_BEARSONSAVE</name>
     <creationDate>25-Oct-19</creationDate>
     <author>Bear</author>
@@ -11,31 +11,35 @@
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
-   <!--  <scriptfile></scriptfile>  -->
+    <!--  <scriptfile></scriptfile>  -->
 
     <!-- Plugin files -->
     <files>
-        <filename plugin="bearsonsave">bearsonsave.php</filename>
+        <filename plugin = "bearsonsave">bearsonsave.php</filename>
         <folder>helper</folder>
         <folder>language</folder>
-        <file>params.php</file>
 
     </files>
 
+    <languages folder = "language">
+        <language tag = "en-GB">en-GB/en-GB.plg_extension_bearsonsave.ini</language>
+        <language tag = "en-GB">en-GB/en-GB.plg_extension_bearsonsave.sys.ini</language>
+    </languages>
+
     <!-- Config parameter -->
     <config>
-        <fields name="params">
-            <fieldset name="basic">
+        <fields name = "params">
+            <fieldset name = "basic">
                 <field
-                        name="DoMinimize"
-                        type="radio"
+                        name = "DoMinimize"
+                        type = "radio"
                         default = "0"
-                        class="btn-group btn-group-yesno"
-                        label="PLG_BEARSONSAVE_DO_MINIMIZE_LABEL"
-                        description="PLG_BEARSONSAVE_DO_MINIMIZE_DESC"
+                        class = "btn-group btn-group-yesno"
+                        label = "PLG_BEARSONSAVE_DO_MINIMIZE_LABEL"
+                        description = "PLG_BEARSONSAVE_DO_MINIMIZE_DESC"
                 >
-                <option value="1">JYES</option>
-                <option value="0">JNO</option>
+                    <option value = "1">JYES</option>
+                    <option value = "0">JNO</option>
                 </field>
             </fieldset>
         </fields>
@@ -43,7 +47,7 @@
 
     <!-- Update servers -->
     <updateservers>
-        <server type="extension" priority="1" name="bearsonsave">https://www.example.com/plg_bearsonsave.xml
+        <server type = "extension" priority = "1" name = "bearsonsave">https://www.example.com/plg_bearsonsave.xml
         </server>
     </updateservers>
 </extension>
