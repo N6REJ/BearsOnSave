@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 
 // MANDATORY FUNCTIONS
-@include_once 'helper/functions.php';
+@include_once JPATH_SITE . '/templates/' . $this->template . 'framework/functions.php';
 
 /*
  * Each template tab should have its own "section" just like it currently is in the framework files.

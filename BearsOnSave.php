@@ -78,8 +78,10 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Gather template parameters.
 		$data = $this->DoGetParams($table);
 
+
 		// process params just like is currently done.
-		@require_once 'params.php';
+		// params file should live with template.
+		@include_once Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('getData'));
 
 		if ( empty($css) )
 		{

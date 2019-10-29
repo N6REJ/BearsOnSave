@@ -7,7 +7,7 @@
     <authorUrl>http://your.url.com</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.10.29</version>
+    <version>j39.2019.10.29.1732</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
@@ -16,7 +16,6 @@
     <!-- Plugin files -->
     <files>
         <filename plugin = "bearsonsave">bearsonsave.php</filename>
-        <folder>helper</folder>
         <folder>language</folder>
 
     </files>
@@ -40,6 +39,15 @@
                 >
                     <option value = "1">JYES</option>
                     <option value = "0">JNO</option>
+                </field>
+                <field
+                        name = "getData"
+                        type = "text"
+                        default = "params.php"
+                        class = "input-sm"
+                        label = "PLG_BEARSONSAVE_GET_DATA_LABEL"
+                        description = "PLG_BEARSONSAVE_GET_DATA_DESC"
+                >
                 </field>
             </fieldset>
         </fields>
