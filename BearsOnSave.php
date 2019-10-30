@@ -76,7 +76,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 		// @TODO we gotta find out what site template it is and its name/location
 		// Gather template parameters.
-		$data = $this->DoGetParams($table);
+		$css = $this->DoGetParams($table);
 
 
 		// process params just like is currently done.
