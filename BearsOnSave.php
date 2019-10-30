@@ -10,7 +10,6 @@
 
 /** @var string $check */
 
-use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
@@ -26,11 +25,12 @@ defined('_JEXEC') or die;
  */
 class plgExtensionBearsOnSave extends CMSPlugin
 {
-	/**
-	 * Application object
-	 *
-	 * @var    CMSApplication
-	 * @since  1.0.0
+	/*
+	  Application object
+
+	  @var    JApplicationCms
+
+	  @since  3.8.0
 	 */
 	protected $app;
 
@@ -78,15 +78,14 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Gather template parameters.
 		$data = $this->DoGetParams($table);
 
-// ========  WORKS UP TO HERE
-
 
 		// process params just like is currently done.
 		// params file should live with template.
-		@require_once Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('getData'));
+		@include_once Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('getData'));
+
 		if ( empty($css) )
 		{
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_PARSING_FAILED', 'danger');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
 			return;
 		}
@@ -103,7 +102,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		{
 
 			// bos.css written successfully
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_OK', 'success');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'success');
 		}
 
 		// Exit back to CMS
@@ -126,7 +125,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// write css file
 		if ( file_put_contents($file, $css) === false )
 		{
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_FAILED', 'danger');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_FAILED'), 'danger');
 
 			return false;
 		}
@@ -151,7 +150,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Is it saved?
 		if ( !file_exists($backupCss) )
 		{
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED', 'danger');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED'), 'danger');
 
 			return false;
 		}
@@ -175,7 +174,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			// No custom.css so lets create one.
 			if ( file_put_contents($customCss, $import) === false )
 			{
-				Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+				Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED'), 'danger');
 
 				return false;
 			}
@@ -191,7 +190,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$data = file_get_contents($customCss);
 		if ( $data === false )
 		{
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_READ_CUSTOMCSS_FAILED', 'danger');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_READ_CUSTOMCSS_FAILED'), 'danger');
 
 			return false;
 		}
@@ -207,7 +206,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Now write the new file.
 		if ( file_put_contents($customCss, $output) === false )
 		{
-			Factory::getApplication()->enqueueMessage('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED', 'danger');
+			Factory::getApplication()->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_CUSTOMCSS_FAILED'), 'danger');
 
 			return false;
 		}
@@ -215,7 +214,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function DoMinimize($check)
+	public function DoMinimize()
 	{
 
 		if ( $this->params->get('DoMinimize') )
