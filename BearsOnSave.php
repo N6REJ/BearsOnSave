@@ -82,8 +82,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// process params just like is currently done.
 		// params file should live with template.
 		@include_once Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('getData'));
-		Echo '<pre>' . print_r($css, true);
-		exit;
+
 		if ( empty($css) )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
@@ -126,7 +125,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// write css file
 		if ( file_put_contents($file, $css) === false )
 		{
-			$this->app > enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_FAILED'), 'danger');
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_FAILED'), 'danger');
 
 			return false;
 		}
