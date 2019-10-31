@@ -96,26 +96,15 @@ function checkPX($check)
 // Set var's
 $css = '';
 
-/**
- * ==================================================
- * Joomla Variables
- * ==================================================
- */
-$app    = Factory::getApplication();
-$doc    = Factory::getDocument();
-$user   = Factory::getUser();
-$lang   = Factory::getLanguage();
-$menu   = Factory::getApplication()->getMenu();
-$active = $app->getMenu()->getActive();
-$params = $app->getTemplate(true)->params;
 
 // Logo Tab
 $logo      = '';
 $style     = '';
 $logoImage = $this->params->get('logoImage');
 $brandText = $this->params->get('brandText');
-var_dump($logoImage, $brandText);
-exit;  // ======= THIS FAILS ============
+var_dump($data);
+exit;
+
 
 
 // Do we even have any params to work with?
