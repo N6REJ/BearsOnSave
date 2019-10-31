@@ -75,23 +75,30 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return;
 		}
 		// @TODO we gotta find out what site template it is and its name/location
-		// Gather template parameters.
-		$css = $this->DoGetParams($table);
+		$dataFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('paramsFile'));
 
-
-		// process params just like is currently done.
-		// params file should live with template.
-		@include_once Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('getData'));
-
-		if ( empty($css) )
+		if ( !file_exists($dataFile) )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
 			return;
 		}
 
-		// Check for DoMinimize
-		$this->DoMinimize($this->params->get('DoMinimize'));
+		// params file should live with template.
+		@include_once $dataFile;
+
+		// Gather template parameters.
+		// $table has all the params so lets fetch it.
+		$data = json_decode($table->params);
+
+		// Check for Minimize
+		if ( $this->params->get('Minimize') )
+		{
+			$Minimize = $doMinimize($css);
+		};
+
+		// Parse the params file to get the $css that needs to be saved
+		$css = $this->doParse();
 
 		// export created css file(s).
 		$file = $this->DoWrite($css, $table);
@@ -106,6 +113,24 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// Exit back to CMS
+		return;
+	}
+
+	public function doMinimize($css)
+	{
+
+		if ( $this->params->get('Minimize') )
+		{
+			$this->app->enqueueMessage($data, 'warning');
+		}
+
+		// If minimize compress params.css into params.min.css
+		return;
+	}
+
+	public function doParse($data)
+	{
+		// Parse params file
 		return;
 	}
 
@@ -133,13 +158,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return $file;
 	}
 
-	public function DoGetParams($table)
-	{
-		// $table has all the params so lets fetch it.
-		$data = json_decode($table->params);
-
-		return $data;
-	}
 
 	public function DoBackup($backupCss, $customCss)
 	{
@@ -214,17 +232,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function DoMinimize()
-	{
 
-		if ( $this->params->get('DoMinimize') )
-		{
-			$this->app->enqueueMessage($data, 'warning');
-		}
-
-		// If minimize compress params.css into params.min.css
-		return;
-	}
 
 	/* ============= END OF CLASS ================== */
 }
