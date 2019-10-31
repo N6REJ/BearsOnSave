@@ -7,7 +7,7 @@
     <authorUrl>http://your.url.com</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.10.29.1732</version>
+    <version>j39.2019.10.31</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
@@ -17,20 +17,14 @@
     <files>
         <filename plugin = "bearsonsave">bearsonsave.php</filename>
         <folder>language</folder>
-
     </files>
-
-    <languages folder = "language">
-        <language tag = "en-GB">en-GB/en-GB.plg_extension_bearsonsave.ini</language>
-        <language tag = "en-GB">en-GB/en-GB.plg_extension_bearsonsave.sys.ini</language>
-    </languages>
 
     <!-- Config parameter -->
     <config>
         <fields name = "params">
             <fieldset name = "basic">
                 <field
-                        name = "DoMinimize"
+                        name = "Minimize"
                         type = "radio"
                         default = "0"
                         class = "btn-group btn-group-yesno"
@@ -41,12 +35,12 @@
                     <option value = "0">JNO</option>
                 </field>
                 <field
-                        name = "getData"
+                        name = "paramsFile"
                         type = "text"
                         default = "params.php"
                         class = "input-sm"
-                        label = "PLG_BEARSONSAVE_GET_DATA_LABEL"
-                        description = "PLG_BEARSONSAVE_GET_DATA_DESC"
+                        label = "PLG_BEARSONSAVE_PARAMS_FILE_LABEL"
+                        description = "PLG_BEARSONSAVE_PARAMS_FILE_DESC"
                 >
                 </field>
             </fieldset>

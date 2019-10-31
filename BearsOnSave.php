@@ -84,21 +84,18 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return;
 		}
 
-		// params file should live with template.
-		@include_once $dataFile;
-
 		// Gather template parameters.
 		// $table has all the params so lets fetch it.
 		$data = json_decode($table->params);
+
+		// params file should live with template.
+		@include_once $dataFile;
 
 		// Check for Minimize
 		if ( $this->params->get('Minimize') )
 		{
 			$Minimize = $doMinimize($css);
 		};
-
-		// Parse the params file to get the $css that needs to be saved
-		$css = $this->doParse();
 
 		// export created css file(s).
 		$file = $this->DoWrite($css, $table);
@@ -128,11 +125,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return;
 	}
 
-	public function doParse($data)
-	{
-		// Parse params file
-		return;
-	}
 
 	public function DoWrite($css, $table)
 	{
