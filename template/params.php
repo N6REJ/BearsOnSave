@@ -11,9 +11,62 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
 
-// MANDATORY FUNCTIONS
-@include_once JPATH_SITE . '/templates/' . $this->template . 'framework/functions.php';
+/*
+ *  ======== LOAD FUNCTIONS =========
+ */
+if ( !function_exists('group_by_key') )
+{
+	function group_by_key($array)
+	{
+		$result = array();
+		/* Safety Trap - Alan */
+		if ( !is_array($array) )
+		{
+			return $result;
+		}
+
+		foreach ( $array as $sub )
+		{
+			foreach ( $sub as $k => $v )
+			{
+				$result[$k][] = $v;
+			}
+		}
+
+		return $result;
+	}
+}
+
+// =========== BEGIN PX PARAMETER VALIDATION FUNCTION ==================
+/* Check for whether a size type ( px, rem, etc ) is used or not.
+	if not then it add's px assuming thats what they should've put.
+	if they did put auto, then it just uses that.
+	also forces any letters used to lowercase.
+ */
+function checkPX($check)
+{
+	if ( $check !== 'auto' )
+	{
+		if ( preg_match('/(\-?[0-9]+)\s*(px|em|%|vh|rem|pt|cm|mm|in|pc|ex|ch|vw|vmin|vmax)?/', $check, $match) )
+		{
+			if ( isset($match[2]) )
+			{
+				$unit = $match[2];
+			}
+			else
+			{
+				$unit = 'px';
+			}
+			$check = $match[1] . $unit;
+		}
+	}
+
+	return strtolower($check);
+}
+
+// =========== END PX PARAMETER VALIDATION FUNCTION ==================
 
 /*
  * Each template tab should have its own "section" just like it currently is in the framework files.
@@ -40,17 +93,37 @@ use Joomla\CMS\Factory;
  *  GOOD LUCK AND HAPPY CODING!! => Bear
  */
 
+// Set var's
+$css = '';
+
+/**
+ * ==================================================
+ * Joomla Variables
+ * ==================================================
+ */
+$app    = Factory::getApplication();
+$doc    = Factory::getDocument();
+$user   = Factory::getUser();
+$lang   = Factory::getLanguage();
+$menu   = Factory::getApplication()->getMenu();
+$active = $app->getMenu()->getActive();
+$params = $app->getTemplate(true)->params;
+
+// Logo Tab
+$logo      = '';
+$style     = '';
+$logoImage = $this->params->get('logoImage');
+$brandText = $this->params->get('brandText');
+var_dump($logoImage, $brandText);
+exit;  // ======= THIS FAILS ============
+
+
 // Do we even have any params to work with?
 if ( !$data )
 {
-	try
-	{
-		Factory::getApplication()->enqueueMessage('WTH ARE THE PARAMS!!!!', 'danger');
-	}
-	catch ( Exception $e )
-	{
-		return $e;
-	}
+
+	Factory::getApplication()->enqueueMessage('WTH ARE THE PARAMS!!!!', 'danger');
+
 	return false;
 }
 
@@ -185,4 +258,3 @@ if ( $data->extendedlogoParams )
  *  **** SOCIAL ICONS ****
  * =======================
  */
-return $css;
