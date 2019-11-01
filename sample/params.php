@@ -1214,13 +1214,11 @@ if ( $data->extendedfooterParams )
 	/* ---- END FOOTER  ---- */
 
 
-	/* BEGIN FOOTER WIDE */
-
 	/*
-	 * ==================================================
-	 * Call Footer chooser
-	 * ==================================================
-	 */
+	* ===== BEGIN FOOTER WIDE =====
+	*/
+
+	// Call Footer chooser
 	$chooser        = $data->footerwideParams;
 	$json           = json_decode($chooser, true);
 	$filtered_array = group_by_key($json);
@@ -1229,12 +1227,13 @@ if ( $data->extendedfooterParams )
 	$footerwideColor           = $filtered_array[0][1];
 	$footerwidelinkColor       = $filtered_array[0][2];
 	$footerwidehoverColor      = $filtered_array[0][3];
-	$footerwideMargin          = checkPX($filtered_array[0][4]);
-	$footerwidePadding         = checkPX($filtered_array[0][5]);
-	$footerwideborderPlacement = $filtered_array[0][6];
-	$footerwideborderColor     = $filtered_array[0][7];
-	$footerwideborderStyle     = $filtered_array[0][8];
-	$footerwideborderSize      = checkPX($filtered_array[0][9]);
+	$footerwidefontSize        = $filtered_array[0][4];
+	$footerwideMargin          = checkPX($filtered_array[0][5]);
+	$footerwidePadding         = checkPX($filtered_array[0][6]);
+	$footerwideborderPlacement = $filtered_array[0][7];
+	$footerwideborderColor     = $filtered_array[0][8];
+	$footerwideborderStyle     = $filtered_array[0][9];
+	$footerwideborderSize      = checkPX($filtered_array[0][10]);
 	/*  ----- END FOOTER CHOOSER ----- */
 
 
@@ -1285,15 +1284,14 @@ if ( $data->extendedfooterParams )
 
 	if ( $footerwideborderSize == 'none' || $footerwideborderSize == '0px' )
 	{
-		$css .= "footer.footer #footer-wide .footer-wide {\n"
-			. " border:none;\n"
+		$css .= "footer.footer > #footer-wide > .footer-wide{\n"
+			. " border: none;\n"
 			. "}\n";
 	}
-
 	if ( $footerwideColor || $footerwideMargin || $footerwidePadding || $footerwideborderPlacement || $footerwideborderColor || $footerwideborderStyle || $footerwideborderSize )
 	{
 
-		$css .= "footer.footer #footer-wide .footer-wide{\n";
+		$css .= "footer.footer > #footer-wide > .footer-wide{\n";
 
 // top & bottom
 		if ( $footerwideBottom && $footerwideTop )
@@ -1435,14 +1433,14 @@ if ( $data->extendedfooterParams )
 			. "}\n";
 	}
 // Footer MARGIN AND PADDING
-	if ( $footerMargin || $footerPadding )
+	if ( $footerwideMargin || $footerwidePadding )
 	{
 		$css .= "footer.footer #footer-wide .footer-wide .module{\n";
-		if ( $footerMargin )
+		if ( $footerwideMargin )
 		{
 			$css .= "	margin: " . $footerwideMargin . ";\n";
 		}
-		if ( $footerPadding )
+		if ( $footerwidePadding )
 		{
 			$css .= "	padding: " . $footerwidePadding . ";\n";
 		}
