@@ -213,13 +213,13 @@ else
 	if ( $nav_location === 'navbar-standard' )
 	{
 		$css .= ".navbar-standard nav.navbar{\n"
-			. "justify-content: " . $nav_horizontal_alignment . ";\n}\n";
+			. " justify-content: " . $nav_horizontal_alignment . ";\n}\n";
 
 		$css .= ".navbar-standard #nav-toggle{\n"
-			. "padding-left: 0;\n"
+			. " padding-left: 0;\n"
 			. "}";
 		$css .= ".navbar-standard #nav-toggle{\n"
-			. "padding-right: 0;\n"
+			. " padding-right: 0;\n"
 			. "}\n";
 	}
 	else
@@ -237,7 +237,9 @@ else
 
 if ( $nav_lineheight )
 {
-	$css .= "ul.nav.navbar > .dropdown > li > a  {\n    line-height: " . $nav_lineheight . ";\n}\n";
+	$css .= "ul.nav.navbar > .dropdown > li > a  {\n"
+		. " line-height: " . $nav_lineheight . ";\n"
+		. "}\n";
 }
 
 // Check for extended parameters to be active
@@ -268,11 +270,15 @@ if ( $data->extendedmainmenuParams )
 
 		if ( $nav_bg_color )
 		{
-			$css .= "nav >  .navbar {\n	background: " . $nav_bg_color . ";\n}\n";
+			$css .= "nav >  .navbar {\n"
+				. " background: " . $nav_bg_color . ";\n"
+				. "}\n";
 		}
 		if ( $nav_barColor )
 		{
-			$css .= "nav >  .navbar-nav {\n	background: " . $nav_barColor . ";\n}\n";
+			$css .= "nav >  .navbar-nav {\n"
+				. " background: " . $nav_barColor . ";\n"
+				. "}\n";
 		}
 
 		if ( $nav_activebackgroundColor )
@@ -282,7 +288,8 @@ if ( $data->extendedmainmenuParams )
 				. "nav > .navbar-nav > li.active > span.separator,"
 				. "nav > .navbar-nav > li.active.parent > span.separator,"
 				. "nav > .navbar-nav > li.active.parent > span.nav-header{\n"
-				. "	background: " . $nav_activebackgroundColor . ";\n}\n";
+				. " background: " . $nav_activebackgroundColor . ";\n"
+				. "}\n";
 
 		}
 
@@ -296,7 +303,8 @@ if ( $data->extendedmainmenuParams )
 				. "nav > .nav > li > a:hover,"
 				. "nav > .nav > li > a:focus,"
 				. "nav > .navbar-nav > li.parent:hover > span.nav-header{\n "
-				. " background-color: " . $nav_backgroundhoverColor . ";\n}\n";
+				. " background-color: " . $nav_backgroundhoverColor . ";\n"
+				. "}\n";
 
 		}
 		if ( $nav_linkbackgroundColor || $nav_linkColor )
@@ -692,7 +700,23 @@ if ( $data->extendedmainmenuParams )
  *  **** MOBILE MENU ****
  * ======================
  */
+$mmenuhamburgerBackground = $data->mmenuhamburgerBackground;
 
+// Set caret rotation for mobile menu
+$css .= "ul.mm-list > .dropdown i." . $icon_caret . ",\n"
+	. "ul.mm-list > .dropdown span." . $icon_caret . ",\n"
+	. "ul.mm-list > .dropdown span.caret,\n"
+	. "ul.mm-list > .dropdown i.caret{\n"
+	. "	transform: rotate(-90deg);\n
+	}\n";
+
+/* Set hamburger background color if set in params */
+if ( $mmenuhamburgerBackground )
+{
+	$css .= ".navbar-toggle .icon-bar {\n"
+		. " background-color: " . $mmenuhamburgerBackground . ";\n"
+		. "}\n";
+}
 
 /**
  * =================
