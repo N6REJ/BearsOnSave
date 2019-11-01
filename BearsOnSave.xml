@@ -43,6 +43,15 @@
                         description = "PLG_BEARSONSAVE_PARAMS_FILE_DESC"
                 >
                 </field>
+                <field
+                        name = "cssFile"
+                        type = "text"
+                        default = "bos.css"
+                        class = "input-sm"
+                        label = "PLG_BEARSONSAVE_CSS_FILE_LABEL"
+                        description = "PLG_BEARSONSAVE_CSS_FILE_DESC"
+                >
+                </field>
             </fieldset>
         </fields>
     </config>
