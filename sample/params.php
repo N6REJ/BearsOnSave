@@ -16,9 +16,12 @@ use Joomla\CMS\Filesystem\Path;
 /*
  *  ==== How to use @import! ====
  *  to use @import assign the string to the $import var.
- *  at the very end of the file you want to have
  *
-$css = $import . "\n" . $css;
+        $import = '@import "foo";' . "\n";
+ *
+ *   at the very end of the file you want to have
+ *
+		$css .= $import . "\n" . $css;
 
  * This will automatically add it to the custom.css file
  */
@@ -105,7 +108,7 @@ function checkPX($check)
  */
 
 // Set var's
-$css = '';
+$css .= '';
 
 // Params are in $data now.
 // Logo Tab
@@ -151,7 +154,7 @@ if ( $data->extendedlogoParams )
 		// SET LOGO image WIDTH AND HEIGHT
 		if ( $logoHeight || $logoWidth )
 		{
-			$css = "header.main-header .logo img{ \n";
+			$css .= "header.main-header .logo img{ \n";
 			if ( $logoWidth )
 			{
 				$css .= "	width: " . $logoWidth . ";\n";
@@ -945,7 +948,7 @@ if ( $headerbackgroundColor || $headerColor || $headerMargin || $headerPadding |
 			$css .= "	padding: " . $headerPadding . ";\n";
 		}
 	}
-	$css .= "}";
+	$css .= "}\n";
 }
 
 if ( $headerlinkColor )
@@ -1174,15 +1177,21 @@ if ( $data->extendedfooterParams )
 
 	if ( $footerbackgroundColor )
 	{
-		$css .= "footer.footer #footer {	background-color: " . $footerbackgroundColor . ";\n}";
+		$css .= "footer.footer #footer {\n"
+			. " background-color: " . $footerbackgroundColor . ";\n"
+			. "}\n";
 	}
 	if ( $footerlinkColor )
 	{
-		$css .= "footer.footer #footer a { color: " . $footerlinkColor . ";\n}";
+		$css .= "footer.footer #footer a {\n"
+			. " color: " . $footerlinkColor . ";\n"
+			. "}\n";
 	}
 	if ( $footerhoverColor )
 	{
-		$css .= "footer.footer #footer a:hover { color: " . $footerhoverColor . ";\n}";
+		$css .= "footer.footer #footer a:hover {\n"
+			. " color: " . $footerhoverColor . ";\n"
+			. "}\n";
 	}
 // Footer MARGIN AND PADDING
 	if ( $footerMargin || $footerPadding )
@@ -1196,7 +1205,7 @@ if ( $data->extendedfooterParams )
 		{
 			$css .= "	padding: " . $footerPadding . ";\n";
 		}
-		$css .= "\n}\n";
+		$css .= "}\n";
 	}
 	/* ---- END FOOTER  ---- */
 
@@ -1272,7 +1281,9 @@ if ( $data->extendedfooterParams )
 
 	if ( $footerwideborderSize == 'none' || $footerwideborderSize == '0px' )
 	{
-		$css .= "footer.footer #footer-wide .footer-wide {\n	border:none;\n}";
+		$css .= "footer.footer #footer-wide .footer-wide {\n"
+			. " border:none;\n"
+			. "}\n";
 	}
 
 	if ( $footerwideColor || $footerwideMargin || $footerwidePadding || $footerwideborderPlacement || $footerwideborderColor || $footerwideborderStyle || $footerwideborderSize )
@@ -1403,15 +1414,21 @@ if ( $data->extendedfooterParams )
 	}
 	if ( $footerwidebackgroundColor )
 	{
-		$css .= "footer.footer > #footer-wide {	background-color: " . $footerwidebackgroundColor . ";\n}";
+		$css .= "footer.footer > #footer-wide {\n"
+			. " background-color: " . $footerwidebackgroundColor . ";\n"
+			. "}\n";
 	}
 	if ( $footerwidelinkColor )
 	{
-		$css .= "footer.footer > #footer-wide  a { color: " . $footerwidelinkColor . ";\n}";
+		$css .= "footer.footer > #footer-wide  a {\n"
+			. " color: " . $footerwidelinkColor . ";\n"
+			. "}\n";
 	}
 	if ( $footerwidehoverColor )
 	{
-		$css .= "footer.footer > #footer-wide  a:hover { color: " . $footerwidehoverColor . ";\n}";
+		$css .= "footer.footer > #footer-wide  a:hover {\n"
+			. " color: " . $footerwidehoverColor . ";\n"
+			. "}\n";
 	}
 // Footer MARGIN AND PADDING
 	if ( $footerMargin || $footerPadding )
@@ -1425,7 +1442,7 @@ if ( $data->extendedfooterParams )
 		{
 			$css .= "	padding: " . $footerwidePadding . ";\n";
 		}
-		$css .= "\n}\n";
+		$css .= "}\n";
 	}
 
 }
@@ -1436,6 +1453,335 @@ if ( $data->extendedfooterParams )
  *  ****  FONTS  ****
  * ==================
  */
+
+/*
+ * ==================================================
+ * Call Typography elements & Google fonts
+ * ==================================================
+ */
+
+// Is Google Fonts active?
+if ( $data->googleFonts )
+{
+
+// Trim @import url( from beginning and ); from end leaving only url
+	$googlefont = trim($data->fontURL);
+	$fontfamily = trim($data->fontFamily);
+
+// Throw error if fonts url or fonts css are empty
+	if ( !$googlefont || !$fontfamily )
+	{
+		//output error
+		Factory::getApplication()->enqueueMessage('<h2>If you want to use Google Fonts you have to add the GF code.</h2>', 'danger');
+
+		return false;
+	}
+
+	// Throw error if fonts url is empty or wrong format
+	if ( substr($googlefont, 0, 12) <> "@import url(" )
+	{
+		//output error
+		Factory::getApplication()->enqueueMessage('<h2>GF URL Code MUST begin with <i>@import</i>.</h2>', 'danger');
+
+		return false;
+	}
+	// Throw error if fonts css is empty or wrong format
+	if ( substr($fontfamily, 0, 12) <> "font-family:" )
+	{
+		//output error
+		Factory::getApplication()->enqueueMessage('<h2>GF CSS Code MUST begin with <i>font-family</i>.</h2>', 'danger');
+
+		return false;
+	}
+
+	// Create stylesheet link
+	$import = $googlefont . "\n";
+
+// Get the Google font choices
+// Make sure we dont' have empty row
+	$chooser        = $data->googlefontsChooser;
+	$json           = json_decode($chooser, true);
+	$filtered_array = group_by_key($json);
+
+	foreach ( $filtered_array as $index => $value )
+	{
+		$html                 = $value[0];
+		$function             = $value[1];
+		$font                 = $value[2];
+		$size                 = checkPX($value[3]);
+		$weight               = $value[4];
+		$style                = $value[5];
+		$color                = $value[6];
+		$backgroundColor      = $value[7];
+		$backgroundhoverColor = $value[8];
+		$hoverColor           = $value[9];
+		$linkColor            = $value[10];
+		$hoverlinkColor       = $value[11];
+		$fontstring           = '';
+
+
+		/* check for duplicate links within elements */
+		if ( $hoverColor && $hoverlinkColor && $html == "body" )
+		{
+			Factory::getApplication()->enqueueMessage(JText::_('TPL_ACORN_DUPLICATE_LINK_ERROR'), 'warning');
+		}
+		/* throw error if " a" included in element */
+		if ( strpos($html, ' a') !== false )
+		{
+			Factory::getApplication()->enqueueMessage(JText::_('TPL_ACORN_EMBEDDED_LINK_ERROR'), 'warning');
+			$html = str_replace(' a', '', $html);
+		}
+
+// Is there anything to process?
+		if ( $html != '' && ($font || $size || $weight || $style || $color || $backgroundColor) )
+		{
+			// process fonts
+			// create CSS declaration.
+			$css .= $html . " {\n";
+
+			// Continue on with chosen font per element.
+			if ( $font )
+			{
+				// create string containing all fonts desired
+				// so they can be put into google font link string.
+
+				$css .= '   font-family: "' . $font . "\";\n";
+			}
+			if ( $size )
+			{
+				// add font size to css declaration
+				$css .= "   font-size: " . $size . ";\n";
+			}
+			if ( $weight )
+			{
+				//add font weight to css declaration
+				$css .= "   font-weight: " . $weight . ";\n";
+			}
+			if ( $style )
+			{
+				//add font style to css declaration
+				$css .= "   font-style: " . $style . ";\n";
+			}
+			if ( $color && $html !== "a" )
+			{
+				// add font color to css declaration
+				$css .= "   color: " . $color . ";\n";
+			}
+			if ( $backgroundColor )
+			{
+				// add background color to css declaration
+				$css .= "   background-color: " . $backgroundColor . ";\n";
+			}
+
+			$css .= "	}\n";
+
+		}
+
+		/* we need to make sure we're not putting active colors for body */
+		if ( $html !== "body" )
+		{
+
+			if ( $backgroundhoverColor )
+			{
+				//add font hover color to css declaration
+				$css .= $html . ":hover, " . $html . ":focus {\n";
+				$css .= "	background-color: " . $backgroundhoverColor . ";\n}\n";
+
+			}
+			if ( $hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . ":hover, " . $html . ":focus {\n";
+				$css .= "	color: " . $hoverColor . ";\n}\n";
+
+			}
+
+			if ( $linkColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . " a {\n";
+				$css .= "	color: " . $linkColor . ";\n}\n";
+
+			}
+			if ( $hoverlinkColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . " a:hover {\n";
+				$css .= "	color: " . $hoverlinkColor . ";\n}\n";
+
+			}
+		}
+		else
+		{
+			if ( $linkColor )
+			{
+				//add font link color to css declaration
+				$css .= "a{\n";
+				$css .= "   color: " . $linkColor . ";\n}\n";
+
+			}
+			if ( $hoverlinkColor && !$hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= "a:hover {\n";
+				$css .= "   color: " . $hoverlinkColor . ";\n}\n";
+
+			}
+			if ( !$hoverlinkColor && $hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= "a:hover, a:focus {\n";
+				$css .= "   color: " . $hoverColor . ";\n}\n";
+
+			}
+			if ( $backgroundhoverColor )
+			{
+				//add font hover color to css declaration
+				$css .= "a:hover, a:focus {\n";
+				$css .= "   background-color: " . $backgroundhoverColor . ";\n}\n";
+			}
+		}
+		// next row
+	}
+	/* ------ END GOOGLE FONTS ------ */
+}
+else
+{
+
+
+	/*
+	 * ==================================================
+	 * Call Typography elements but not fonts
+	 * ==================================================
+	 */
+
+// Make sure we dont' have empty row
+
+	$chooser        = $data->fontsChooser;
+	$json           = json_decode($chooser, true);
+	$filtered_array = group_by_key($json);
+
+	foreach ( $filtered_array as $index => $value )
+	{
+		$html                 = $value[0];
+		$function             = $value[1];
+		$size                 = checkPX($value[2]);
+		$weight               = $value[3];
+		$style                = $value[4];
+		$color                = $value[5];
+		$backgroundColor      = $value[6];
+		$backgroundhoverColor = $value[7];
+		$hoverColor           = $value[8];
+		$linkColor            = $value[9];
+		$hoverlinkColor       = $value[10];
+
+
+		/* check for duplicate links within elements */
+		if ( $hoverColor && $hoverlinkColor && $html == "body" )
+		{
+			Factory::getApplication()->enqueueMessage(JText::_('TPL_ACORN_DUPLICATE_LINK_ERROR'), 'warning');
+		}
+		/* throw error if " a" included in element */
+		if ( strpos($html, ' a') !== false )
+		{
+			Factory::getApplication()->enqueueMessage(JText::_('TPL_ACORN_EMBEDDED_LINK_ERROR'), 'warning');
+			$html = str_replace(' a', '', $html);
+		}
+
+		// Is there anything to process?
+		if ( $html != '' && ($size || $weight || $style || $color || $backgroundColor) )
+		{
+			// process fonts
+			// create CSS declaration.
+			$css .= $html . " {\n";
+
+			if ( $size )
+			{
+				// add font size to css declaration
+				$css .= "   font-size: " . $size . ";\n";
+			}
+			if ( $weight )
+			{
+				//add font weight to css declaration
+				$css .= "   font-weight: " . $weight . ";\n";
+			}
+			if ( $style )
+			{
+				//add font style to css declaration
+				$css .= "   font-style: " . $style . ";\n";
+			}
+			if ( $color && $html !== "a" )
+			{
+				// add font color to css declaration
+				$css .= "   color: " . $color . ";\n";
+			}
+			if ( $backgroundColor )
+			{
+				// add background color to css declaration
+				$css .= "   background-color: " . $backgroundColor . ";\n";
+			}
+			$css .= "	}\n";
+
+		}
+
+		/* we need to make sure we're not putting active colors for body */
+		if ( $html !== "body" )
+		{
+			if ( $backgroundhoverColor )
+			{
+				//add font hover color to css declaration
+				$css .= $html . ":hover, " . $html . ":focus {\n";
+				$css .= "	background-color: " . $backgroundhoverColor . ";\n}\n";
+			}
+			if ( $hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . ":hover, " . $html . ":focus {\n";
+				$css .= "	color: " . $hoverColor . ";\n}\n";
+			}
+
+			if ( $linkColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . " a {\n";
+				$css .= "	color: " . $linkColor . ";\n}\n";
+			}
+			if ( $hoverlinkColor )
+			{
+				//add font link color to css declaration
+				$css .= $html . " a:hover {\n";
+				$css .= "	color: " . $hoverlinkColor . ";\n}\n";
+			}
+		}
+		else
+		{
+			if ( $linkColor )
+			{
+				//add font link color to css declaration
+				$css .= "a{\n";
+				$css .= "   color: " . $linkColor . ";\n}\n";
+			}
+			if ( $hoverlinkColor && !$hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= "a:hover {\n";
+				$css .= "   color: " . $hoverlinkColor . ";\n}\n";
+			}
+			if ( !$hoverlinkColor && $hoverColor )
+			{
+				//add font link color to css declaration
+				$css .= "a:hover, a:focus {\n";
+				$css .= "   color: " . $hoverColor . ";\n}\n";
+			}
+			if ( $backgroundhoverColor )
+			{
+				//add font hover color to css declaration
+				$css .= "a:hover, a:focus {\n";
+				$css .= "   background-color: " . $backgroundhoverColor . ";\n}\n";
+			}
+		}
+	}
+}
 
 
 /**
@@ -1476,4 +1822,5 @@ if ( $copyrightPosition )
  *  **** DO NOT CHANGE ANYTHING BELOW THIS!!! ****
  * ===============================================
  */
-$css = $import ? $import . "\n" : $css;
+
+$css = $import ? $import . "\n" . $css : $css;
