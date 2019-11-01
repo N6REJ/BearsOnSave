@@ -284,13 +284,13 @@ if ( $data->extendedmainmenuParams )
 
 		if ( $nav_bg_color )
 		{
-			$css .= "nav >  .navbar {\n"
+			$css .= "nav > .navbar {\n"
 				. " background: " . $nav_bg_color . ";\n"
 				. "}\n";
 		}
 		if ( $nav_barColor )
 		{
-			$css .= "nav >  .navbar-nav {\n"
+			$css .= "nav > .navbar-nav {\n"
 				. " background: " . $nav_barColor . ";\n"
 				. "}\n";
 		}
@@ -323,7 +323,7 @@ if ( $data->extendedmainmenuParams )
 		}
 		if ( $nav_linkbackgroundColor || $nav_linkColor )
 		{
-			$css .= "nav >  ul.navbar-nav li a, nav#mnu ul.navbar-nav li > span.nav-header, nav >  ul.navbar-nav li > span.separator {\n ";
+			$css .= "nav > ul.navbar-nav li a, nav#mnu ul.navbar-nav li > span.nav-header, nav > ul.navbar-nav li > span.separator {\n ";
 			if ( $nav_linkColor )
 			{
 				$css .= "	color: " . $nav_linkColor . ";\n";
@@ -338,25 +338,29 @@ if ( $data->extendedmainmenuParams )
 		if ( $nav_dropdownhoverColor )
 		{
 			$css .= "nav .dropdown-menu > li > a.selected,"
-				. "nav  .dropdown-menu > li > a:hover,"
-				. "nav  .dropdown-menu > li > a:focus,"
-				. "nav  .dropdown-submenu:hover > a,"
-				. "nav  .dropdown-submenu:focus > a,"
-				. "nav  li.selected,"
+				. "nav .dropdown-menu > li > a:hover,"
+				. "nav .dropdown-menu > li > a:focus,"
+				. "nav .dropdown-submenu:hover > a,"
+				. "nav .dropdown-submenu:focus > a,"
+				. "nav li.selected,"
 				. "nav.navbar-nav ul.dropdown-menu li a:hover"
 				. "{\n"
-				. "background-image: none;\n"
-				. "background-color: " . $nav_dropdownhoverColor . ";\n"
+				. " background-image: none;\n"
+				. " background-color: " . $nav_dropdownhoverColor . ";\n"
 				. "}\n";
 		}
 
 		if ( $nav_dropdownbackgroundColor )
 		{
-			$css .= "nav >  .dropdown {\n	background-color: " . $nav_dropdownbackgroundColor . ";\n}\n";
+			$css .= "nav > .dropdown {\n"
+				. " background-color: " . $nav_dropdownbackgroundColor . ";\n"
+				. "}\n";
 		}
 		if ( $nav_dropdownlinkColor )
 		{
-			$css .= "nav >  ul.navbar-nav .dropdown-menu li a{\n color: " . $nav_dropdownlinkColor . ";\n}\n";
+			$css .= "nav > ul.navbar-nav .dropdown-menu li a{\n"
+				. " color: " . $nav_dropdownlinkColor . ";\n"
+				. "}\n";
 		}
 	}
 	/**
@@ -418,7 +422,7 @@ if ( $data->extendedmainmenuParams )
 		// Set border styles
 		if ( $nav_borderSize || $nav_borderPlacement || $nav_borderColor || $nav_borderStyle )
 		{
-			$css .= "nav >  .navbar-nav {\n ";
+			$css .= "nav > .navbar-nav {\n ";
 			// top & bottom
 			if ( $nav_Bottom && $nav_Top )
 			{
@@ -518,7 +522,7 @@ if ( $data->extendedmainmenuParams )
 			}
 			elseif ( $nav_Border = 'all' )
 			{
-				$css .= "nav >  .navbar-nav {\n ";
+				$css .= "nav > .navbar-nav {\n ";
 
 				if ( $nav_borderSize )
 				{
@@ -585,7 +589,7 @@ if ( $data->extendedmainmenuParams )
 
 		if ( $nav_itemborderSize || $nav_itemborderPlacement || $nav_itemborderColor || $nav_itemborderStyle )
 		{
-			$css .= "nav >  .navbar-nav li {\n ";
+			$css .= "nav > .navbar-nav li {\n ";
 			// top & bottom
 			if ( $nav_itemBottom && $nav_itemTop )
 			{

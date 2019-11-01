@@ -11,7 +11,7 @@
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
-    <!--  <scriptfile></scriptfile>  -->
+    <!--  <scriptfile></scriptfile> -->
 
     <!-- Plugin files -->
     <files>
