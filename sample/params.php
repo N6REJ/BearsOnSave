@@ -724,6 +724,233 @@ if ( $mmenuhamburgerBackground )
  * =================
  */
 
+/*
+ * ==================================================
+ * Call Header chooser
+ * ==================================================
+ */
+$chooser        = $data->headerParams;
+$json           = json_decode($chooser, true);
+$filtered_array = group_by_key($json);
+
+$headerbackgroundColor = $filtered_array[0][0];
+$headerColor           = $filtered_array[0][1];
+$headerlinkColor       = $filtered_array[0][2];
+$headerhoverColor      = $filtered_array[0][3];
+$headerMargin          = checkPX($filtered_array[0][4]);
+$headerPadding         = checkPX($filtered_array[0][5]);
+$headerborderPlacement = $filtered_array[0][6];
+$headerborderColor     = $filtered_array[0][7];
+$headerborderStyle     = $filtered_array[0][8];
+$headerborderSize      = checkPX($filtered_array[0][9]);
+/*  ----- END HEADER CHOOSER ----- */
+
+$headerTop    = '';
+$headerBottom = '';
+$headerLeft   = '';
+$headerRight  = '';
+$headerBorder = '';
+
+if ( !$headerborderPlacement == '' )
+{
+
+	if ( $headerborderPlacement == 'none' )
+	{
+		$headerBorder = 'none';
+	}
+	elseif ( $headerborderPlacement == 'topandbottom' )
+	{
+		$headerTop    = 'top';
+		$headerBottom = 'bottom';
+	}
+	elseif ( $headerborderPlacement == 'leftandright' )
+	{
+		$headerLeft  = 'left';
+		$headerRight = 'right';
+	}
+	elseif ( $headerborderPlacement == 'all' )
+	{
+		$headerBorder = 'all';
+	}
+	elseif ( $headerborderPlacement == 'left' )
+	{
+		$headerLeft = 'left';
+	}
+	elseif ( $headerborderPlacement == 'right' )
+	{
+		$headerRight = 'right';
+	}
+	elseif ( $headerborderPlacement == 'bottom' )
+	{
+		$headerBottom = 'bottom';
+	}
+	elseif ( $headerborderPlacement == 'top' )
+	{
+		$headerTop = 'top';
+	}
+}
+
+if ( $headerbackgroundColor || $headerColor || $headerMargin || $headerPadding || $headerborderPlacement || $headerborderColor || $headerborderStyle || $headerborderSize )
+{
+
+	$css .= "header.main-header {\n";
+
+	// None
+	if ( $headerBorder == 'none' )
+	{
+		$css .= "	border: none;\n";
+
+// top & bottom
+	}
+	elseif ( $headerBottom && $headerTop )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerBottom . "-width: " . $headerborderSize . ";\n";
+			$css .= "	border-" . $headerTop . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerBottom . "-style: " . $headerborderStyle . ";\n";
+			$css .= "	border-" . $headerTop . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerBottom . "-color: " . $headerborderColor . ";\n";
+			$css .= "	border-" . $headerTop . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerLeft && $headerRight )
+	{
+
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerRight . "-width: " . $headerborderSize . ";\n";
+			$css .= "	border-" . $headerLeft . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerRight . "-style: " . $headerborderStyle . ";\n";
+			$css .= "	border-" . $headerLeft . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerRight . "-color: " . $headerborderColor . ";\n";
+			$css .= "	border-" . $headerLeft . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerLeft && !$headerRight )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerLeft . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerLeft . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerLeft . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerRight && !$headerLeft )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerRight . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerRight . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerRight . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerTop && !$headerBottom )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerTop . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerTop . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerTop . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerBottom && !$headerTop )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-" . $headerBottom . "-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-" . $headerBottom . "-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-" . $headerBottom . "-color: " . $headerborderColor . ";\n";
+		}
+	}
+	elseif ( $headerBorder = 'all' )
+	{
+		if ( $headerborderSize )
+		{
+			$css .= "	border-width: " . $headerborderSize . ";\n";
+		}
+		if ( $headerborderStyle )
+		{
+			$css .= "	border-style: " . $headerborderStyle . ";\n";
+		}
+		if ( $headerborderColor )
+		{
+			$css .= "	border-color: " . $headerborderColor . ";\n";
+		}
+	}
+
+	/* ---- BEGIN HEADER COLORING----  */
+	if ( $headerColor )
+	{
+		$css .= "	color: " . $headerColor . ";\n";
+	}
+
+// Header MARGIN AND PADDING
+	if ( $headerMargin || $headerPadding )
+	{
+
+		if ( $headerMargin )
+		{
+			$css .= "	margin: " . $headerMargin . ";\n";
+		}
+		if ( $headerPadding )
+		{
+			$css .= "	padding: " . $headerPadding . ";\n";
+		}
+	}
+	$css .= "}";
+}
+
+if ( $headerlinkColor )
+{
+	$css .= "header.main-header a { color: " . $headerlinkColor . ";}\n";
+}
+if ( $headerhoverColor )
+{
+	$css .= "header.main-header a:hover { color: " . $headerhoverColor . ";}\n";
+}
+if ( $headerbackgroundColor )
+{
+	$css .= "header.main-header {	background-color: " . $headerbackgroundColor . ";}\n";
+}
+/* ---- END HEADER  ---- */
+
 
 /**
  * =================
@@ -731,6 +958,467 @@ if ( $mmenuhamburgerBackground )
  * =================
  */
 
+// Set variables
+
+/*
+ * ==================================================
+ * Call Footer chooser
+ * ==================================================
+ */
+if ( $data->extendedfooterParams )
+{
+	$chooser        = $data->footerParams;
+	$json           = json_decode($chooser, true);
+	$filtered_array = group_by_key($json);
+
+	$footerbackgroundColor = $filtered_array[0][0];
+	$footerColor           = $filtered_array[0][1];
+	$footerlinkColor       = $filtered_array[0][2];
+	$footerhoverColor      = $filtered_array[0][3];
+	$footerMargin          = checkPX($filtered_array[0][4]);
+	$footerPadding         = checkPX($filtered_array[0][5]);
+	$footerborderPlacement = $filtered_array[0][6];
+	$footerborderColor     = $filtered_array[0][7];
+	$footerborderStyle     = $filtered_array[0][8];
+	$footerborderSize      = checkPX($filtered_array[0][9]);
+	/*  ----- END FOOTER CHOOSER ----- */
+
+	$footerTop    = '';
+	$footerBottom = '';
+	$footerLeft   = '';
+	$footerRight  = '';
+	$footerBorder = '';
+
+	if ( !$footerborderPlacement == '' )
+	{
+
+		if ( $footerborderPlacement == 'none' )
+		{
+			$footerBorder = 'none';
+		}
+		elseif ( $footerborderPlacement == 'topandbottom' )
+		{
+			$footerTop    = 'top';
+			$footerBottom = 'bottom';
+		}
+		elseif ( $footerborderPlacement == 'leftandright' )
+		{
+			$footerLeft  = 'left';
+			$footerRight = 'right';
+		}
+		elseif ( $footerborderPlacement == 'all' )
+		{
+			$footerBorder = 'all';
+		}
+		elseif ( $footerborderPlacement == 'left' )
+		{
+			$footerLeft = 'left';
+		}
+		elseif ( $footerborderPlacement == 'right' )
+		{
+			$footerRight = 'right';
+		}
+		elseif ( $footerborderPlacement == 'bottom' )
+		{
+			$footerBottom = 'bottom';
+		}
+		elseif ( $footerborderPlacement == 'top' )
+		{
+			$footerTop = 'top';
+		}
+	}
+
+	if ( $footerborderSize == 'none' || $footerborderSize == '0px' )
+	{
+		$css .= "footer.footer #footer .container {border:none;}";
+	}
+
+	if ( $footerColor || $footerMargin || $footerPadding || $footerborderPlacement || $footerborderColor || $footerborderStyle || $footerborderSize )
+	{
+
+		$css .= "footer.footer #footer .container {\n";
+
+// top & bottom
+		if ( $footerBottom && $footerTop )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerBottom . "-width: " . $footerborderSize . ";\n";
+				$css .= "	border-" . $footerTop . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerBottom . "-style: " . $footerborderStyle . ";\n";
+				$css .= "	border-" . $footerTop . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerBottom . "-color: " . $footerborderColor . ";\n";
+				$css .= "	border-" . $footerTop . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerLeft && $footerRight )
+		{
+
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerRight . "-width: " . $footerborderSize . ";\n";
+				$css .= "	border-" . $footerLeft . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerRight . "-style: " . $footerborderStyle . ";\n";
+				$css .= "	border-" . $footerLeft . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerRight . "-color: " . $footerborderColor . ";\n";
+				$css .= "	border-" . $footerLeft . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerLeft && !$footerRight )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerLeft . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerLeft . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerLeft . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerRight && !$footerLeft )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerRight . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerRight . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerRight . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerTop && !$footerBottom )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerTop . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerTop . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerTop . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerBottom && !$footerTop )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-" . $footerBottom . "-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-" . $footerBottom . "-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-" . $footerBottom . "-color: " . $footerborderColor . ";\n";
+			}
+		}
+		elseif ( $footerBorder = 'all' )
+		{
+			if ( $footerborderSize )
+			{
+				$css .= "	border-width: " . $footerborderSize . ";\n";
+			}
+			if ( $footerborderStyle )
+			{
+				$css .= "	border-style: " . $footerborderStyle . ";\n";
+			}
+			if ( $footerborderColor )
+			{
+				$css .= "	border-color: " . $footerborderColor . ";\n";
+			}
+		}
+
+		/* ---- BEGIN FOOTER COLORING----  */
+		if ( $footerColor )
+		{
+			$css .= "	color: " . $footerColor . ";\n";
+		}
+
+		$css .= "}";
+	}
+
+	if ( $footerbackgroundColor )
+	{
+		$css .= "footer.footer #footer {	background-color: " . $footerbackgroundColor . ";\n}";
+	}
+	if ( $footerlinkColor )
+	{
+		$css .= "footer.footer #footer a { color: " . $footerlinkColor . ";\n}";
+	}
+	if ( $footerhoverColor )
+	{
+		$css .= "footer.footer #footer a:hover { color: " . $footerhoverColor . ";\n}";
+	}
+// Footer MARGIN AND PADDING
+	if ( $footerMargin || $footerPadding )
+	{
+		$css .= "footer.footer #footer .module{\n";
+		if ( $footerMargin )
+		{
+			$css .= "	margin: " . $footerMargin . ";\n";
+		}
+		if ( $footerPadding )
+		{
+			$css .= "	padding: " . $footerPadding . ";\n";
+		}
+		$css .= "\n}\n";
+	}
+	/* ---- END FOOTER  ---- */
+
+
+	/* BEGIN FOOTER WIDE */
+
+	/*
+	 * ==================================================
+	 * Call Footer chooser
+	 * ==================================================
+	 */
+	$chooser        = $data->footerwideParams;
+	$json           = json_decode($chooser, true);
+	$filtered_array = group_by_key($json);
+
+	$footerwidebackgroundColor = $filtered_array[0][0];
+	$footerwideColor           = $filtered_array[0][1];
+	$footerwidelinkColor       = $filtered_array[0][2];
+	$footerwidehoverColor      = $filtered_array[0][3];
+	$footerwideMargin          = checkPX($filtered_array[0][4]);
+	$footerwidePadding         = checkPX($filtered_array[0][5]);
+	$footerwideborderPlacement = $filtered_array[0][6];
+	$footerwideborderColor     = $filtered_array[0][7];
+	$footerwideborderStyle     = $filtered_array[0][8];
+	$footerwideborderSize      = checkPX($filtered_array[0][9]);
+	/*  ----- END FOOTER CHOOSER ----- */
+
+
+	$footerwideTop    = '';
+	$footerwideBottom = '';
+	$footerwideLeft   = '';
+	$footerwideRight  = '';
+	$footerwideBorder = '';
+
+	if ( !$footerwideborderPlacement == '' )
+	{
+
+		if ( $footerwideborderPlacement == 'none' )
+		{
+			$footerwideBorder = 'none';
+		}
+		elseif ( $footerwideborderPlacement == 'topandbottom' )
+		{
+			$footerwideTop    = 'top';
+			$footerwideBottom = 'bottom';
+		}
+		elseif ( $footerwideborderPlacement == 'leftandright' )
+		{
+			$footerwideLeft  = 'left';
+			$footerwideRight = 'right';
+		}
+		elseif ( $footerwideborderPlacement == 'all' )
+		{
+			$footerwideBorder = 'all';
+		}
+		elseif ( $footerwideborderPlacement == 'left' )
+		{
+			$footerwideLeft = 'left';
+		}
+		elseif ( $footerwideborderPlacement == 'right' )
+		{
+			$footerwideRight = 'right';
+		}
+		elseif ( $footerwideborderPlacement == 'bottom' )
+		{
+			$footerwideBottom = 'bottom';
+		}
+		elseif ( $footerwideborderPlacement == 'top' )
+		{
+			$footerwideTop = 'top';
+		}
+	}
+
+	if ( $footerwideborderSize == 'none' || $footerwideborderSize == '0px' )
+	{
+		$css .= "footer.footer #footer-wide .footer-wide {\n	border:none;\n}";
+	}
+
+	if ( $footerwideColor || $footerwideMargin || $footerwidePadding || $footerwideborderPlacement || $footerwideborderColor || $footerwideborderStyle || $footerwideborderSize )
+	{
+
+		$css .= "footer.footer #footer-wide .footer-wide{\n";
+
+// top & bottom
+		if ( $footerwideBottom && $footerwideTop )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideBottom . "-width: " . $footerwideborderSize . ";\n";
+				$css .= "	border-" . $footerwideTop . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideBottom . "-style: " . $footerwideborderStyle . ";\n";
+				$css .= "	border-" . $footerwideTop . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideBottom . "-color: " . $footerwideborderColor . ";\n";
+				$css .= "	border-" . $footerwideTop . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideLeft && $footerwideRight )
+		{
+
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideRight . "-width: " . $footerwideborderSize . ";\n";
+				$css .= "	border-" . $footerwideLeft . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideRight . "-style: " . $footerwideborderStyle . ";\n";
+				$css .= "	border-" . $footerwideLeft . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideRight . "-color: " . $footerwideborderColor . ";\n";
+				$css .= "	border-" . $footerwideLeft . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideLeft && !$footerwideRight )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideLeft . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideLeft . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideLeft . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideRight && !$footerwideLeft )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideRight . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideRight . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideRight . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideTop && !$footerwideBottom )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideTop . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideTop . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideTop . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideBottom && !$footerwideTop )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-" . $footerwideBottom . "-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-" . $footerwideBottom . "-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-" . $footerwideBottom . "-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+		elseif ( $footerwideBorder = 'all' )
+		{
+			if ( $footerwideborderSize )
+			{
+				$css .= "	border-width: " . $footerwideborderSize . ";\n";
+			}
+			if ( $footerwideborderStyle )
+			{
+				$css .= "	border-style: " . $footerwideborderStyle . ";\n";
+			}
+			if ( $footerwideborderColor )
+			{
+				$css .= "	border-color: " . $footerwideborderColor . ";\n";
+			}
+		}
+
+		if ( $footerwideColor )
+		{
+			$css .= "	color: " . $footerwideColor . ";\n";
+		}
+		$css .= "}\n";
+
+	}
+	if ( $footerwidebackgroundColor )
+	{
+		$css .= "footer.footer > #footer-wide {	background-color: " . $footerwidebackgroundColor . ";\n}";
+	}
+	if ( $footerwidelinkColor )
+	{
+		$css .= "footer.footer > #footer-wide  a { color: " . $footerwidelinkColor . ";\n}";
+	}
+	if ( $footerwidehoverColor )
+	{
+		$css .= "footer.footer > #footer-wide  a:hover { color: " . $footerwidehoverColor . ";\n}";
+	}
+// Footer MARGIN AND PADDING
+	if ( $footerMargin || $footerPadding )
+	{
+		$css .= "footer.footer #footer-wide .footer-wide .module{\n";
+		if ( $footerMargin )
+		{
+			$css .= "	margin: " . $footerwideMargin . ";\n";
+		}
+		if ( $footerPadding )
+		{
+			$css .= "	padding: " . $footerwidePadding . ";\n";
+		}
+		$css .= "\n}\n";
+	}
+
+}
+/* ---- END FOOTER  ---- */
 
 /**
  * ==================
