@@ -50,14 +50,18 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 *
 	 * @since   1.0.0
 	 */
-	public function onExtensionAfterInstall()
-	{
-		// @Todo run AfterSave so that the params.css file is created
-		// Show file compressed in plugin dialog so user is aware of it
+	/*	public function onExtensionAfterInstall($eid, $isNew)
+		{
 
-		// Create the css for the first time
-		//$this->onExtensionAfterSave($context, $table, $isNew);
-	}
+			// @Todo run on install ONLY
+			if ($isNew)
+			{
+				$db = JFactory::getDbo();
+				$db->setQuery("UPDATE #__extensions SET `enabled` = 1 WHERE `extension_id` = $eid AND `type` = 'plugin'");
+				$db->execute();
+			}
+		}
+	*/
 
 	/**
 	 * onAfterSave.
@@ -68,12 +72,13 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	 * @var string $css
 	 * @since   1.0.0
 	 */
-	public function onExtensionAfterSave($context, $table, $isNew)
+	public function onExtensionAfterSave($context, $table)
 	{
 		if ( $context !== 'com_templates.style' || $table->client_id )
 		{
 			return;
 		}
+
 		// @TODO we gotta find out what site template it is and its name/location
 		$dataFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('paramsFile'));
 

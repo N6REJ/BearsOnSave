@@ -65,7 +65,6 @@ function checkPX($check)
 
 	return strtolower($check);
 }
-
 // =========== END PX PARAMETER VALIDATION FUNCTION ==================
 
 /*
@@ -96,15 +95,12 @@ function checkPX($check)
 // Set var's
 $css = '';
 
-
+// Params are in $data now.
 // Logo Tab
 $logo      = '';
 $style     = '';
-$logoImage = $this->params->get('logoImage');
-$brandText = $this->params->get('brandText');
-var_dump($data);
-exit;
-
+$logoImage = $data->logoImage;
+$brandText = $data->brandText;
 
 
 // Do we even have any params to work with?
