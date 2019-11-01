@@ -14,6 +14,17 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
 
 /*
+ *  ==== How to use @import! ====
+ *  to use @import assign the string to the $import var.
+ *  at the very end of the file you want to have
+ *
+$css = $import . "\n" . $css;
+
+ * This will automatically add it to the custom.css file
+ */
+$import = "";
+
+/*
  *  ======== LOAD FUNCTIONS =========
  */
 if ( !function_exists('group_by_key') )
@@ -1458,3 +1469,11 @@ if ( $copyrightPosition )
  *  **** SOCIAL ICONS ****
  * =======================
  */
+
+
+/**
+ * ===============================================
+ *  **** DO NOT CHANGE ANYTHING BELOW THIS!!! ****
+ * ===============================================
+ */
+$css = $import ? $import . "\n" : $css;
