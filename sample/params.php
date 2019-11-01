@@ -1534,7 +1534,7 @@ if ( $data->googleFonts )
 			$html = str_replace(' a', '', $html);
 		}
 
-// Is there anything to process?
+		// Is there anything to process?
 		if ( $html != '' && ($font || $size || $weight || $style || $color || $backgroundColor) )
 		{
 			// process fonts
