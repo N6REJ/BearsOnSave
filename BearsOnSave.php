@@ -103,9 +103,9 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		};
 
 		// export created css file(s).
-		$file = $this->DoWrite($css, $table);
+		$cssFile = $this->DoWrite($css, $table);
 
-		$result = $this->DoPrepend($table, $css, $file);
+		$result = $this->DoPrepend($table, $css, $cssFile);
 
 		if ( $result === true )
 		{
@@ -136,23 +136,23 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		/* Write css file(s). */
 
 		// What template?
-		$file = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/bos.css');
+		$cssFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssFile'));
 
 		// Delete existing bos.css file.
-		if ( File::exists($file) )
+		if ( File::exists($cssFile) )
 		{
-			File::delete($file);
+			File::delete($cssFile);
 		}
 
 		// write css file
-		if ( file_put_contents($file, $css) === false )
+		if ( file_put_contents($cssFile, $css) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_FAILED'), 'danger');
 
 			return false;
 		}
 
-		return $file;
+		return $cssFile;
 	}
 
 
@@ -173,7 +173,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function DoPrepend($table, $css, $file)
+	public function DoPrepend($table, $css, $cssFile)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
@@ -182,7 +182,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Let's make some var's.
 		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
 		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
-		$import    = '@import "' . (Path::clean($this->params->get('filename'))) . '";';
+		$import    = '@import "' . Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . (Path::clean($this->params->get('cssFile')))) . '";';
 
 		if ( file_exists($customCss) === false )
 		{
@@ -228,8 +228,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		return true;
 	}
-
-
 
 	/* ============= END OF CLASS ================== */
 }
