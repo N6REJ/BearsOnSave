@@ -1,0 +1,1 @@
+$css = "body{ background-color: purple; color: yellow;}";

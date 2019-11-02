@@ -7,7 +7,7 @@
     <authorUrl>http://your.url.com</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.10.31</version>
+    <version>j39.2019.11.02</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
