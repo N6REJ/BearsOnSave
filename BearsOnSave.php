@@ -209,14 +209,20 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 			return false;
 		}
-		if ( strpos($data, $import) !== false )
-		{
-			// Nothing to be done, it's already there
-			return true;
-		}
 
-		// ok, lets add the @import.
-		$output = $import . "\n" . $data;
+		// Loop through our array, & see if we've already added the @import before.
+		$lines = file($customCss);
+		foreach ( $lines as $line_num => $line )
+		{
+			// use '|||' as unique EOL delimiter
+			if ( strpos($line, $import) !== false || strpos($line, '|||') !== false )
+			{
+				// Nothing to be done, it's already there
+				return true;
+			}
+		}
+		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
+		$output = $import . " /* BOS @import ||| */\n" . $data;
 
 		// Now write the new file.
 		if ( file_put_contents($customCss, $output) === false )
