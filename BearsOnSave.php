@@ -2,10 +2,10 @@
 /**
  * @package    bearsonsave
  *
- * @author     Bear <your@email.com>
- * @copyright  A copyright
+ * @author     Bear <troy@hallhome.us>
+ * @copyright  Nov 02 2019
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       http://your.url.com
+ * @link       http://hallhome.us
  */
 
 /** @var string $check */
@@ -107,13 +107,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		$result = $this->DoPrepend($table, $css, $cssFile);
 
-		if ( $result === true )
-		{
-
-			// bos.css written successfully
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'success');
-		}
-
 		// Exit back to CMS
 		return;
 	}
@@ -136,7 +129,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		/* Write css file(s). */
 
 		// What template?
-		$cssFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssFile'));
+		$cssFile = '/templates/' . $table->template . '/css/' . $this->params->get('cssFile');
 
 		// Delete existing bos.css file.
 		if ( File::exists($cssFile) )
@@ -182,7 +175,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Let's make some var's.
 		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
 		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
-		$import    = '@import "' . Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . (Path::clean($this->params->get('cssFile')))) . '";';
+		$import    = '@import "' . '/templates/' . $table->template . '/css/' . $this->params->get('cssFile') . '";';
 
 		if ( file_exists($customCss) === false )
 		{
