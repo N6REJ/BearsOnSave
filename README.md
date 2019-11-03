@@ -14,12 +14,12 @@ MUST only trigger when active template uses save not during any other time.
 - click save.<br>
 - you should get the following warning..
 
-![no-params](no-params.png)<br>
+![no-params](images/no-params.png)<br>
 - now copy the params.php file into the base folder of the template.<br>
 - click save.<br>
 - you should now get
 
-![image](success.png)<br>
+![image](images/success.png)<br>
 
 - there should now be the following files created in the '/css' folder of your template.<br>
  .	".backup.custom.css"<br>

@@ -103,9 +103,9 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		};
 
 		// export created css file(s).
-		$cssFile = $this->DoWrite($css, $table);
+		$cssIn = $this->DoWrite($css, $table);
 
-		$result = $this->DoPrepend($table, $css, $cssFile);
+		$result = $this->DoPrepend($table, $css, $cssIn);
 
 		// Exit back to CMS
 		return;
@@ -129,23 +129,23 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		/* Write css file(s). */
 
 		// What template?
-		$cssFile = '/templates/' . $table->template . '/css/' . $this->params->get('cssFile');
+		$cssIn = PATH::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn'));
 
 		// Delete existing bos.css file.
-		if ( File::exists($cssFile) )
+		if ( File::exists($cssIn) )
 		{
-			File::delete($cssFile);
+			File::delete($cssIn);
 		}
 
 		// write css file
-		if ( file_put_contents($cssFile, $css) === false )
+		if ( file_put_contents($cssIn, $css) === false )
 		{
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_FAILED'), 'danger');
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_CSS_FAILED'), 'danger');
 
 			return false;
 		}
 
-		return $cssFile;
+		return $cssIn;
 	}
 
 
@@ -166,7 +166,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function DoPrepend($table, $css, $cssFile)
+	public function DoPrepend($table, $css, $cssIn)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
@@ -175,7 +175,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Let's make some var's.
 		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
 		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
-		$import    = '@import "' . '/templates/' . $table->template . '/css/' . $this->params->get('cssFile') . '";';
+		$import    = '@import "' . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn') . '";';
 
 		if ( file_exists($customCss) === false )
 		{
