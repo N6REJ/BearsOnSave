@@ -94,7 +94,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$data = json_decode($table->params);
 
 		// params file should live with template.
-		@include_once $dataFile;
+		include_once $dataFile;
 
 		// Check for Minimize
 		if ( $this->params->get('Minimize') )
@@ -103,9 +103,9 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		};
 
 		// export created css file(s).
-		$cssIn = $this->DoWrite($css, $table);
+		$cssIn = $this->doWrite($css, $table);
 
-		$result = $this->DoPrepend($table, $css, $cssIn);
+		$result = $this->doPrepend($table, $css, $cssIn);
 
 		// Exit back to CMS
 		return;
@@ -124,7 +124,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	}
 
 
-	public function DoWrite($css, $table)
+	public function doWrite($css, $table)
 	{
 		/* Write css file(s). */
 
@@ -149,7 +149,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	}
 
 
-	public function DoBackup($backupCss, $customCss)
+	public function doBackup($backupCss, $customCss)
 	{
 		// Since custom.css exists we need to be very careful!
 		// backup existing custom.css to '.backup.custom.css' just to CYA
@@ -166,7 +166,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function DoPrepend($table, $css, $cssIn)
+	public function doPrepend($table, $css, $cssIn)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
@@ -189,7 +189,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// Ok, it exists so time to backup.
-		if ( $this->DoBackup($backupCss, $customCss) === false )
+		if ( $this->doBackup($backupCss, $customCss) === false )
 		{
 			return false;
 		}
