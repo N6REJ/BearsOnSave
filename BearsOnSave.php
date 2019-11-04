@@ -99,7 +99,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Check for Minimize
 		if ( $this->params->get('Minimize') )
 		{
-			$Minimize = $doMinimize($css);
+			$Minimize = doMinimize($css);
 		};
 
 		// export created css file(s).
