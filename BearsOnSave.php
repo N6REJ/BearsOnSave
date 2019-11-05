@@ -10,10 +10,23 @@
 
 /** @var string $check */
 
+/** @var string $minifier */
+
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
+use MatthiasMullie\Minify;
 
+$path = JPATH_PLUGINS . '/extension/bearsonsave/vendor/matthiasmullie';
+require_once $path . '/minify/src/Minify.php';
+require_once $path . '/minify/src/CSS.php';
+require_once $path . '/minify/src/JS.php';
+require_once $path . '/minify/src/Exception.php';
+require_once $path . '/minify/src/Exceptions/BasicException.php';
+require_once $path . '/minify/src/Exceptions/FileImportException.php';
+require_once $path . '/minify/src/Exceptions/IOException.php';
+require_once $path . '/path-converter/src/ConverterInterface.php';
+require_once $path . '/path-converter/src/Converter.php';
 
 defined('_JEXEC') or die;
 
@@ -96,10 +109,10 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		include_once $dataFile;
 
 		// Check for Minimize
-		if ( $this->params->get('Minimize') )
+		if ( $this->params->get('Minify') )
 		{
-			$Minimize = doMinimize($css);
-		};
+			$result = $this->doMinify($table);
+		}
 
 		// export created css file(s).
 		$cssIn = $this->doWrite($css, $table);
@@ -109,22 +122,21 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		if ( $result === true )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'message');
-		};
+		}
 
 		// Exit back to CMS
 		return;
 	}
 
-	public function doMinimize($css)
+	public function doMinify($table)
 	{
+		// If minimize compress bos.css into boss.min.css
+		$sourcePath   = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn'));
+		$minifier     = new Minify\CSS($sourcePath);
+		$minifiedPath = substr($sourcePath, 0, strrpos($sourcePath, ".")) . '.min.css';
+		$minifier->minify($minifiedPath);
 
-		if ( $this->params->get('Minimize') )
-		{
-			$this->app->enqueueMessage($data, 'warning');
-		}
-
-		// If minimize compress params.css into params.min.css
-		return;
+		return true;
 	}
 
 
