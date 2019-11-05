@@ -13,7 +13,7 @@
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Factory;
+
 
 defined('_JEXEC') or die;
 
@@ -79,16 +79,15 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return;
 		}
 
+
 		// @TODO we gotta find out what site template it is and its name/location
 		$dataFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('paramsFile'));
-
 		if ( !file_exists($dataFile) )
 		{
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
+			$this->app->enqueueMessage(JJText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
 			return;
 		}
-
 		// Gather template parameters.
 		// $table has all the params so lets fetch it.
 		$data = json_decode($table->params);
@@ -106,6 +105,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$cssIn = $this->doWrite($css, $table);
 
 		$result = $this->doPrepend($table, $css, $cssIn);
+
+		if ( $result === true )
+		{
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'message');
+		};
 
 		// Exit back to CMS
 		return;
@@ -129,7 +133,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		/* Write css file(s). */
 
 		// What template?
-		$cssIn = PATH::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn'));
+		$cssIn = '/templates/' . $table->template . '/css/' . $this->params->get('cssIn');
 
 		// Delete existing bos.css file.
 		if ( File::exists($cssIn) )
@@ -138,7 +142,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// write css file
-		if ( file_put_contents($cssIn, $css) === false )
+		if ( file_put_contents(Path::clean(JPATH_SITE . $cssIn), $css) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_CSS_FAILED'), 'danger');
 
@@ -175,7 +179,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Let's make some var's.
 		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
 		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
-		$import    = '@import "' . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn') . '";';
+		$import    = '@import "' . $cssIn . '";';
 
 		if ( file_exists($customCss) === false )
 		{
