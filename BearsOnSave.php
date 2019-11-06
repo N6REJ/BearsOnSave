@@ -161,14 +161,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	}
 
 
-	public function doBackup($backupCss, $customCss)
+	public function doBackup($backupCss, $data)
 	{
 		// Since custom.css exists we need to be very careful!
 		// backup existing custom.css to '.backup.custom.css' just to CYA
-		File::copy($customCss, $backupCss);
-
-		// Is it saved?
-		if ( !file_exists($backupCss) )
+		if ( file_put_contents($backupCss, $data) === false)
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED'), 'danger');
 
@@ -204,12 +201,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			}
 		}
 
-		// Ok, it exists so time to backup.
-		if ( $this->doBackup($backupCss, $customCss) === false )
-		{
-			return false;
-		}
-
 		// get existing custom.css data.
 		$lines = file($customCss);
 		if ( $lines === false )
@@ -234,6 +225,13 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
 		$output = $import . " /* BOS @import ||| */\n" . $data;
+
+
+		// Ok, it exists so time to backup.
+		if ( $this->doBackup($backupCss, $data) === false )
+		{
+			return false;
+		}
 
 		// Now write the new file.
 		if ( file_put_contents($customCss, $output) === false )
