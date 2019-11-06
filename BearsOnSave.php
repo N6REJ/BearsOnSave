@@ -79,7 +79,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$dataFile = Path::clean(JPATH_SITE . $template . $this->params->get('paramsFile'));
 		if ( !file_exists($dataFile) )
 		{
-			$this->app->enqueueMessage(JJText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
 			return;
 		}
