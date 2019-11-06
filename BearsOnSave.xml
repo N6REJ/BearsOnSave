@@ -7,7 +7,7 @@
     <authorUrl>http://your.url.com</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.11.06.0658</version>
+    <version>j39.2019.11.06.0900</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
@@ -28,13 +28,13 @@
                 <field
                         name = "Minify"
                         type = "radio"
-                        default = "0"
+                        default = ""
                         class = "btn-group btn-group-yesno"
                         label = "PLG_BEARSONSAVE_DO_MINIMIZE_LABEL"
                         description = "PLG_BEARSONSAVE_DO_MINIMIZE_DESC"
                 >
                     <option value = "1">JYES</option>
-                    <option value = "0">JNO</option>
+                    <option value = "">JNO</option>
                 </field>
                 <field
                         name = "paramsFile"
