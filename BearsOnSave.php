@@ -57,26 +57,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 
 	/**
-	 * onAfterInstall.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0.0
-	 */
-	/*	public function onExtensionAfterInstall($eid, $isNew)
-		{
-
-			// @Todo run on install ONLY
-			if ($isNew)
-			{
-				$db = JFactory::getDbo();
-				$db->setQuery("UPDATE #__extensions SET `enabled` = 1 WHERE `extension_id` = $eid AND `type` = 'plugin'");
-				$db->execute();
-			}
-		}
-	*/
-
-	/**
 	 * onAfterSave.
 	 *
 	 * @return  void
@@ -92,15 +72,19 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return;
 		}
 
+// Lets set some basic vars
+		$template = '/templates/' . $table->template . '/';
 
 		// @TODO we gotta find out what site template it is and its name/location
-		$dataFile = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/' . $this->params->get('paramsFile'));
+		$dataFile = Path::clean(JPATH_SITE . $template . $this->params->get('paramsFile'));
 		if ( !file_exists($dataFile) )
 		{
 			$this->app->enqueueMessage(JJText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
 			return;
 		}
+		$minify = false;
+
 		// Gather template parameters.
 		// $table has all the params so lets fetch it.
 		$data = json_decode($table->params);
@@ -108,16 +92,18 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// params file should live with template.
 		include_once $dataFile;
 
-		// Check for Minimize
-		if ( $this->params->get('Minify') )
+		if ( empty($css) )
 		{
-			$result = $this->doMinify($table);
+			// Since $css is missing give up.
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_MISSING_CSS'), 'danger');
+
+			return;
 		}
 
-		// export created css file(s).
-		$cssIn = $this->doWrite($css, $table);
+		// export created css file(s) - $css comes from include.
+		$minify = $this->doWrite($css, $template);
 
-		$result = $this->doPrepend($table, $css, $cssIn);
+		$result = $this->doPrepend($template, $minify);
 
 		if ( $result === true )
 		{
@@ -128,24 +114,15 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return;
 	}
 
-	public function doMinify($table)
+	public function doWrite($css, $template)
 	{
-		// If minimize compress bos.css into boss.min.css
-		$sourcePath   = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/' . $this->params->get('cssIn'));
-		$minifier     = new Minify\CSS($sourcePath);
-		$minifiedPath = substr($sourcePath, 0, strrpos($sourcePath, ".")) . '.min.css';
-		$minifier->minify($minifiedPath);
-
-		return true;
-	}
-
-
-	public function doWrite($css, $table)
-	{
-		/* Write css file(s). */
+		$minify = $this->params->get('Minify');
 
 		// What template?
-		$cssIn = '/templates/' . $table->template . '/css/' . $this->params->get('cssIn');
+		$cssIn             = $this->params->get('cssIn');
+		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, "."));
+		$cssExtension      = $minify ? '.min.css' : '.css';
+		$cssIn             = Path::clean(JPATH_SITE . $template . '/css/' . $cssIn_noExtension . $cssExtension);
 
 		// Delete existing bos.css file.
 		if ( File::exists($cssIn) )
@@ -153,15 +130,22 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			File::delete($cssIn);
 		}
 
-		// write css file
-		if ( file_put_contents(Path::clean(JPATH_SITE . $cssIn), $css) === false )
+		// Check for Minimize
+		if ( $minify == true )
+		{
+			// If minimize compress bos.css into boss.min.css
+			$minifier     = new Minify\CSS($cssIn);
+			$minifiedPath = $cssIn;
+			$minifier->minify($minifiedPath);
+		}
+		elseif(file_put_contents($cssIn, $css) === false)
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_CSS_FAILED'), 'danger');
 
 			return false;
 		}
 
-		return $cssIn;
+		return true;
 	}
 
 
@@ -182,16 +166,20 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function doPrepend($table, $css, $cssIn)
+	public function doPrepend($template, $minify)
 	{
 		/* if custom.css exists we need to prepend our @import to the first line.
 		* else just create it with our line being first.
 		*/
 
 		// Let's make some var's.
-		$customCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/custom.css');
-		$backupCss = Path::clean(JPATH_SITE . '/templates/' . $table->template . '/css/.backup.custom.css');
-		$import    = '@import "' . $cssIn . '";';
+		$customCss         = Path::clean(JPATH_SITE . $template . 'css/custom.css');
+		$backupCss         = Path::clean(JPATH_SITE . $template . 'css/.backup.custom.css');
+		$cssIn             = $this->params->get('cssIn');
+		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, "."));
+		$cssExtension      = $minify ? '.min.css' : '.css';
+		$import            = '@import "' . $template . 'css/' . $cssIn_noExtension . $cssExtension . '";';
+
 
 		if ( file_exists($customCss) === false )
 		{
@@ -211,25 +199,27 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// get existing custom.css data.
-		$data = file_get_contents($customCss);
-		if ( $data === false )
+		$lines = file($customCss);
+		if ( $lines === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_READ_CUSTOMCSS_FAILED'), 'danger');
 
 			return false;
 		}
-
-		// Loop through our array, & see if we've already added the @import before.
-		$lines = file($customCss);
+		// Let's see if we've already added the @import before.
 		foreach ( $lines as $line_num => $line )
 		{
 			// use '|||' as unique EOL delimiter
 			if ( strpos($line, $import) !== false || strpos($line, '|||') !== false )
 			{
-				// Nothing to be done, it's already there
-				return true;
+				// It's there so delete it.
+				$lines[$line_num] = '';
 			}
 		}
+
+		// Convert custom.css back into a string like before.
+		$data = implode($lines);
+
 		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
 		$output = $import . " /* BOS @import ||| */\n" . $data;
 
