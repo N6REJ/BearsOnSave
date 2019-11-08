@@ -7,7 +7,7 @@
     <authorUrl>http://your.url.com</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.11.06.0900</version>
+    <version>j39.2019.11.07.2055</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
@@ -52,6 +52,16 @@
                         class = "input-sm"
                         label = "PLG_BEARSONSAVE_CSS_FILE_LABEL"
                         description = "PLG_BEARSONSAVE_CSS_FILE_DESC"
+                >
+                </field>
+                <field
+                        name = "variableName"
+                        type = "text"
+                        default = "css"
+                        required = "true"
+                        class = "input-sm"
+                        label = "PLG_BEARSONSAVE_VARIABLE_LABEL"
+                        description = "PLG_BEARSONSAVE_VARIABLE_DESC"
                 >
                 </field>
             </fieldset>

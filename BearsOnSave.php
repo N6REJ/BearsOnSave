@@ -92,6 +92,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// params file should live with template.
 		include_once $dataFile;
 
+		// Get variable used in params file
+		$variableName = $this->params->get('variableName');
+		// Assign the variable requested to $css
+		$css = $$variableName;
+
 		if ( empty($css) )
 		{
 			// Since $css is missing give up.
@@ -165,7 +170,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	{
 		// Since custom.css exists we need to be very careful!
 		// backup existing custom.css to '.backup.custom.css' just to CYA
-		if ( file_put_contents($backupCss, $data) === false)
+		if ( file_put_contents($backupCss, $data) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED'), 'danger');
 
