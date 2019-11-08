@@ -21,7 +21,6 @@ use MatthiasMullie\Minify;
 require_once __DIR__ . '/vendor/autoload.php';
 
 
-
 /**
  * bearsonsave plugin.
  *
@@ -256,14 +255,81 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// Set basic variables
 		$path    = JPATH_SITE . $template;
 		$fileOut = Path::clean($path . $this->params->get('staticOut'));
+		$fileIn  = Path::clean($path . $this->params->get('staticIn'));
 
 		// Read vars from input file.
-		include_once Path::clean($path . $this->params->get('staticIn'));
+		//include_once Path::clean($path . $this->params->get('staticIn'));
 
+		// get existing custom.css data.
+		$lines = file($fileIn);
+		if ( $lines === false )
+		{
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_STATIC_FAILED'), 'danger');
+
+			return false;
+		}
+		// parse each line
+		foreach ( $lines as $line_num => $line )
+		{
+			// Get varname;
+			$varname = $this->getVarname($line);
+			$value   = $this->getValue($line);
+
+			// Ok, lets parse it if all is perfect
+			if ( $varname && $value )
+			{
+				echo $varname . '=' . $value . '<br>';
+			}
+			//var_dump($var);
+
+		}
+		- + exit;
+		// Convert custom.css back into a string like before.
+		$params = implode($lines);
+
+		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
+		$output = $import . " /* BOS @import ||| */\n" . $params;
 
 		if ( file_put_contents($fileOut, $output) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
+		}
+	}
+
+	public function getVarname($line)
+	{
+		// If the first character isn't $ then assume it's not a variable name.
+		$start = stripos($line, "$");
+		if ( $start === 0 )
+		{
+			// Find the = position for the variable name.
+			$end = stripos($line, "=");
+
+			// Get the variable name
+			$var = trim(substr($line, $start, $end));
+
+			return $var;
+		}
+
+	}
+
+	public function getValue($line)
+	{
+		// If the first character isn't $ then assume it's not a variable name.
+		$start = stripos($line, "$");
+		if ( $start === 0 )
+		{
+			// ok so it's a valid varname, lets get the variable value.
+			$start = stripos($line, "=") + 1;
+
+			// Find the = position for the variable name.
+			$end = stripos($line, ";");
+
+			// Get the variable name
+			$value = trim(substr($line, $start, $end));
+
+			return $value;
+
 		}
 	}
 	/* ============= END OF CLASS ================== */
