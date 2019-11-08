@@ -7,7 +7,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       http://hallhome.us
  */
-
+defined('_JEXEC') or die;
 /** @var string $check */
 
 /** @var string $minifier */
@@ -17,18 +17,10 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
 use MatthiasMullie\Minify;
 
-$path = JPATH_PLUGINS . '/extension/bearsonsave/vendor/matthiasmullie';
-require_once $path . '/minify/src/Minify.php';
-require_once $path . '/minify/src/CSS.php';
-require_once $path . '/minify/src/JS.php';
-require_once $path . '/minify/src/Exception.php';
-require_once $path . '/minify/src/Exceptions/BasicException.php';
-require_once $path . '/minify/src/Exceptions/FileImportException.php';
-require_once $path . '/minify/src/Exceptions/IOException.php';
-require_once $path . '/path-converter/src/ConverterInterface.php';
-require_once $path . '/path-converter/src/Converter.php';
+// Load minify
+require_once __DIR__ . '/vendor/autoload.php';
 
-defined('_JEXEC') or die;
+
 
 /**
  * bearsonsave plugin.
@@ -113,6 +105,16 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		if ( $result === true )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'message');
+		}
+
+		if ( $this->params->get('Static') )
+		{
+
+			$result = $this->doStatic($template, $data);
+			if ( $result === true )
+			{
+				$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_OK'), 'message');
+			}
 		}
 
 		// Exit back to CMS
@@ -249,5 +251,17 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
+	public function doStatic($template, $data)
+	{
+
+		// Read array from input file.
+		include_once Path::clean(JPATH_SITE . $template . $this->params->get('staticIn'));
+
+		$fileOut = Path::clean(JPATH_SITE . $template . $this->params->get('staticOut'));
+		if ( file_put_contents($fileOut, $output) === false )
+		{
+			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
+		}
+	}
 	/* ============= END OF CLASS ================== */
 }
