@@ -68,8 +68,8 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$template = '/templates/' . $table->template . '/';
 
 		// @TODO we gotta find out what site template it is and its name/location
-		$dataFile = Path::clean(JPATH_SITE . $template . $this->params->get('paramsFile'));
-		if ( !file_exists($dataFile) )
+		$paramsFile = Path::clean(JPATH_SITE . $template . $this->params->get('paramsFile'));
+		if ( !file_exists($paramsFile) )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_FAILED'), 'danger');
 
@@ -79,10 +79,10 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// Gather template parameters.
 		// $table has all the params so lets fetch it.
-		$data = json_decode($table->params);
+		$params = json_decode($table->params);
 
 		// params file should live with template.
-		include_once $dataFile;
+		include_once $paramsFile;
 
 		// Get variable used in params file
 		$variableName = $this->params->get('variableName');
@@ -110,7 +110,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		if ( $this->params->get('Static') )
 		{
 
-			$result = $this->doStatic($template, $data);
+			$result = $this->doStatic($template, $params);
 			if ( $result === true )
 			{
 				$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_OK'), 'message');
@@ -168,11 +168,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	}
 
 
-	public function doBackup($backupCss, $data)
+	public function doBackup($backupCss, $params)
 	{
 		// Since custom.css exists we need to be very careful!
 		// backup existing custom.css to '.backup.custom.css' just to CYA
-		if ( file_put_contents($backupCss, $data) === false )
+		if ( file_put_contents($backupCss, $params) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_BACKUP_FAILED'), 'danger');
 
@@ -228,14 +228,14 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		// Convert custom.css back into a string like before.
-		$data = implode($lines);
+		$params = implode($lines);
 
 		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
-		$output = $import . " /* BOS @import ||| */\n" . $data;
+		$output = $import . " /* BOS @import ||| */\n" . $params;
 
 
 		// Ok, it exists so time to backup.
-		if ( $this->doBackup($backupCss, $data) === false )
+		if ( $this->doBackup($backupCss, $params) === false )
 		{
 			return false;
 		}
@@ -251,13 +251,16 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function doStatic($template, $data)
+	public function doStatic($template, $params)
 	{
+		// Set basic variables
+		$path    = JPATH_SITE . $template;
+		$fileOut = Path::clean($path . $this->params->get('staticOut'));
 
-		// Read array from input file.
-		include_once Path::clean(JPATH_SITE . $template . $this->params->get('staticIn'));
+		// Read vars from input file.
+		include_once Path::clean($path . $this->params->get('staticIn'));
 
-		$fileOut = Path::clean(JPATH_SITE . $template . $this->params->get('staticOut'));
+
 		if ( file_put_contents($fileOut, $output) === false )
 		{
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
