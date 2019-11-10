@@ -1,16 +1,19 @@
 <?php
 /**
  * @package    bearsonsave
- *
- * @author     Bear <troy@hallhome.us>
- * @copyright  Nov 02 2019
+ * @author     Troy Hall
+ * @copyright  2019 Troy Hall
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       http://hallhome.us
  */
 defined('_JEXEC') or die;
-/** @var string $check */
+/*
+    @var string $check
+*/
 
-/** @var string $minifier */
+/*
+    @var string $minifier
+*/
 
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Filesystem\Path;
@@ -24,25 +27,26 @@ require_once __DIR__ . '/vendor/autoload.php';
 /**
  * bearsonsave plugin.
  *
- * @package   bearsonsave
- * @since     1.0.0
+ * @package bearsonsave
+ * @since   1.0.0
  */
 class plgExtensionBearsOnSave extends CMSPlugin
 {
+
 	/*
-	  Application object
+		Application object
 
-	  @var    JApplicationCms
+		@var    JApplicationCms
 
-	  @since  3.8.0
-	 */
+		@since  3.8.0
+	*/
 	protected $app;
 
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *
-	 * @var    boolean
-	 * @since  1.0.0
+	 * @var   boolean
+	 * @since 1.0.0
 	 */
 	protected $autoloadLanguage = true;
 
@@ -50,11 +54,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 	/**
 	 * onAfterSave.
 	 *
-	 * @return  void
+	 * @return void
 	 *
 	 * @throws Exception
-	 * @var string $css
-	 * @since   1.0.0
+	 * @var    string $css
+	 * @since  1.0.0
 	 */
 	public function onExtensionAfterSave($context, $table)
 	{
@@ -63,7 +67,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return;
 		}
 
-// Lets set some basic vars
+		// Lets set some basic vars
 		$template = '/templates/' . $table->template . '/';
 
 		// @TODO we gotta find out what site template it is and its name/location
@@ -74,6 +78,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 			return;
 		}
+
 		$minify = false;
 
 		// Gather template parameters.
@@ -108,7 +113,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		if ( $this->params->get('Static') )
 		{
-
 			$result = $this->doStatic($template, $params);
 			if ( $result === true )
 			{
@@ -118,7 +122,9 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// Exit back to CMS
 		return;
-	}
+
+	}//end onExtensionAfterSave()
+
 
 	public function doWrite($css, $template)
 	{
@@ -126,16 +132,16 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// What css filename should we use?
 		$cssIn             = $this->params->get('cssIn');
-		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, "."));
+		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, '.'));
 		$rootPath          = Path::clean(JPATH_SITE . $template . '/css/' . $cssIn_noExtension);
 		$sourcePath        = $rootPath . '.css';
-
 
 		// Delete existing bos.css file(s).
 		if ( file_exists($sourcePath) )
 		{
 			File::delete($sourcePath);
 		}
+
 		if ( file_exists($rootPath . '.min.css') )
 		{
 			File::delete($rootPath . '.min.css');
@@ -148,6 +154,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 			return false;
 		}
+
 		// Check for Minimize
 		if ( $minify == true )
 		{
@@ -164,7 +171,8 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		return true;
-	}
+
+	}//end doWrite()
 
 
 	public function doBackup($backupCss, $params)
@@ -179,20 +187,23 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		return true;
-	}
+
+	}//end doBackup()
+
 
 	public function doPrepend($template)
 	{
-		/* if custom.css exists we need to prepend our @import to the first line.
-		* else just create it with our line being first.
-		*/
+		/*
+			if custom.css exists we need to prepend our @import to the first line.
+		 * else just create it with our line being first.
+		 */
 
 		// Let's make some var's.
 		$customCss         = Path::clean(JPATH_SITE . $template . 'css/custom.css');
 		$backupCss         = Path::clean(JPATH_SITE . $template . 'css/.backup.custom.css');
 		$minify            = $this->params->get('Minify');
 		$cssIn             = $this->params->get('cssIn');
-		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, "."));
+		$cssIn_noExtension = substr($cssIn, 0, strrpos($cssIn, '.'));
 		$cssExtension      = $minify ? '.min.css' : '.css';
 		$import            = '@import "' . $template . 'css/' . $cssIn_noExtension . $cssExtension . '";';
 
@@ -215,6 +226,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 			return false;
 		}
+
 		// Let's see if we've already added the @import before.
 		foreach ( $lines as $line_num => $line )
 		{
@@ -232,7 +244,6 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
 		$output = $import . " /* BOS @import ||| */\n" . $params;
 
-
 		// Ok, it exists so time to backup.
 		if ( $this->doBackup($backupCss, $params) === false )
 		{
@@ -248,9 +259,11 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		}
 
 		return true;
-	}
 
-	public function doStatic($template, $params)
+	}//end doPrepend()
+
+
+	private function doStatic($template, $params)
 	{
 		// Set basic variables
 		$path    = JPATH_SITE . $template;
@@ -258,52 +271,35 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		$fileIn  = Path::clean($path . $this->params->get('staticIn'));
 
 		// Read vars from input file.
-		//include_once Path::clean($path . $this->params->get('staticIn'));
+		include_once Path::clean($path . $this->params->get('staticIn'));
 
 		// get existing custom.css data.
-		$lines = file($fileIn);
-		if ( $lines === false )
-		{
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_STATIC_FAILED'), 'danger');
+		//  $lines = file($fileIn);
 
-			return false;
-		}
-		// parse each line
-		foreach ( $lines as $line_num => $line )
-		{
-			// Get varname;
-			$varname = $this->getVarname($line);
-			$value   = $this->getValue($line);
+		/*
+		  if ($lines === false) {
+			   $this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_PARSING_STATIC_FAILED'), 'danger');
 
-			// Ok, lets parse it if all is perfect
-			if ( $varname && $value )
-			{
-				echo $varname . '=' . $value . '<br>';
-			}
-			//var_dump($var);
+			   return false;
+		   }
 
-		}
-		- + exit;
-		// Convert custom.css back into a string like before.
-		$params = implode($lines);
-
-		// ok, lets add the @import. use ' /* BOS @import ||| */' as unique EOL delimiter
-		$output = $import . " /* BOS @import ||| */\n" . $params;
-
-		if ( file_put_contents($fileOut, $output) === false )
-		{
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
-		}
+		   if (file_put_contents($fileOut, $output) === false) {
+			   $this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
+		   }
+   */
 	}
+
+	//end doStatic()
+
 
 	public function getVarname($line)
 	{
 		// If the first character isn't $ then assume it's not a variable name.
-		$start = stripos($line, "$");
+		$start = stripos($line, '$');
 		if ( $start === 0 )
 		{
 			// Find the = position for the variable name.
-			$end = stripos($line, "=");
+			$end = stripos($line, '=');
 
 			// Get the variable name
 			$var = trim(substr($line, $start, $end));
@@ -311,26 +307,29 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			return $var;
 		}
 
-	}
+	}//end getVarname()
+
 
 	public function getValue($line)
 	{
 		// If the first character isn't $ then assume it's not a variable name.
-		$start = stripos($line, "$");
+		$start = stripos($line, '$');
 		if ( $start === 0 )
 		{
 			// ok so it's a valid varname, lets get the variable value.
-			$start = stripos($line, "=") + 1;
+			$start = (stripos($line, '=') + 1);
 
 			// Find the = position for the variable name.
-			$end = stripos($line, ";");
+			$end = stripos($line, ';');
 
 			// Get the variable name
 			$value = trim(substr($line, $start, $end));
 
 			return $value;
-
 		}
-	}
-	/* ============= END OF CLASS ================== */
-}
+
+	}//end getValue()
+
+
+	// ============= END OF CLASS ==================
+}//end class
