@@ -7,7 +7,7 @@
     <authorUrl>http://hallhome.us</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.11.14</version>
+    <version>j39.2019.11.16</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->

@@ -79,7 +79,7 @@ class plgExtensionBearsOnSave extends CMSPlugin
 
 		// Gather template parameters.
 		// $table has all the params so lets fetch it.
-		$data = json_decode($table->params);
+		$data = new Registry($table->params);
 
 		// params file should live with template.
 		include_once $dataFile;
@@ -107,18 +107,8 @@ class plgExtensionBearsOnSave extends CMSPlugin
 			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_WRITE_OK'), 'message');
 		}
 
-		if ( $this->params->get('Static') )
-		{
-
-			$result = $this->doStatic($template, $data);
-			if ( $result === true )
-			{
-				$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_OK'), 'message');
-			}
-		}
 
 		// Exit back to CMS
-		return;
 	}
 
 	public function doWrite($css, $template)
@@ -251,17 +241,5 @@ class plgExtensionBearsOnSave extends CMSPlugin
 		return true;
 	}
 
-	public function doStatic($template, $data)
-	{
-
-		// Read array from input file.
-		include_once Path::clean(JPATH_SITE . $template . $this->params->get('staticIn'));
-
-		$fileOut = Path::clean(JPATH_SITE . $template . $this->params->get('staticOut'));
-		if ( file_put_contents($fileOut, $output) === false )
-		{
-			$this->app->enqueueMessage(JText::_('PLG_BEARSONSAVE_STATIC_FAILED'), 'danger');
-		}
-	}
 	/* ============= END OF CLASS ================== */
 }
