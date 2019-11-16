@@ -16,6 +16,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
 use MatthiasMullie\Minify;
+use Joomla\Registry\Registry;
 
 // Load minify
 require_once __DIR__ . '/vendor/autoload.php';
