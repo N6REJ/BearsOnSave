@@ -3,7 +3,6 @@ echo "Starting build..."
 rd /s /q .build
 mkdir .build
 copy *.* .build
-copy LICENSE .build
 del ".build\.*"
 del ".build\build.bat"
 xcopy /S /Y /I language .build\language
@@ -24,6 +23,7 @@ FOR /F "skip=1 tokens=1-6" %%A IN ('WMIC Path Win32_LocalTime Get Day^,Hour^,Min
 SET DatePartYear=%FDATE:~0,4%
 SET DatePartMonth=%FDATE:~4,2%
 SET DatePartDay=%FDATE:~6,2%
+del ..\.releases\bearsonsave-J3.9.%DatePartYear%.%DatePartMonth%.%DatePartDay%.zip
 call "C:\Program Files\7-Zip\7z.exe" a -y -r ..\.releases\bearsonsave-J3.9.%DatePartYear%.%DatePartMonth%.%DatePartDay%.zip *.*
 cd ..
 rd /s /q .build
