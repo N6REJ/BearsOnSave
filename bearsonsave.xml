@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type = "plugin" version = "3.8" group = "extension" method = "upgrade">
     <name>PLG_BEARSONSAVE</name>
-    <creationDate>25-Oct-19</creationDate>
+    <creationDate>10-Mar-20</creationDate>
     <author>Bear</author>
     <authorEmail>sales@hallhome.us</authorEmail>
     <authorUrl>http://hallhome.us</authorUrl>
     <copyright>A copyright</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>j39.2019.11.21</version>
+    <version>j39.2020.03.10</version>
     <description>PLG_BEARSONSAVE_XML_DESCRIPTION</description>
 
     <!-- Scripts to run on installation -->
