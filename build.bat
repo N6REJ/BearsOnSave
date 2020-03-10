@@ -20,11 +20,7 @@ FOR /F "skip=1 tokens=1-6" %%A IN ('WMIC Path Win32_LocalTime Get Day^,Hour^,Min
     )
 )
 
-SET DatePartYear=%FDATE:~0,4%
-SET DatePartMonth=%FDATE:~4,2%
-SET DatePartDay=%FDATE:~6,2%
-del ..\.releases\bearsonsave-J3.9.%DatePartYear%.%DatePartMonth%.%DatePartDay%.zip
-call "C:\Program Files\7-Zip\7z.exe" a -y -r ..\.releases\bearsonsave-J3.9.%DatePartYear%.%DatePartMonth%.%DatePartDay%.zip *.*
+call "C:\Program Files\7-Zip\7z.exe" a -y -r -aoa ..\.releases\bearsonsave-J3.9.%FDATE%.zip *.*
 cd ..
 rd /s /q .build
 echo "Done..."
