@@ -18,7 +18,7 @@
         <filename plugin = "bearsonsave">bearsonsave.php</filename>
         <folder>language</folder>
         <folder>vendor</folder>
-        <filename>LICENSE</filename>
+        <filename>LICENSE.txt</filename>
     </files>
 
     <!-- Config parameter -->
