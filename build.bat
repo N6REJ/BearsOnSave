@@ -3,6 +3,7 @@ echo "Starting build..."
 rd /s /q .build
 mkdir .build
 copy *.* .build
+copy LICENSE .build
 del ".build\.*"
 del ".build\build.bat"
 xcopy /S /Y /I language .build\language
